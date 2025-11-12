@@ -1,7 +1,7 @@
 {
   "name": "mighty-architect",
   "version": "1.0.0",
-  "description": "Port of Windsurf Meta-Cognitive Workflow Architecture for Claude Code",
+  "description": "Port of Windsurf Meta-Cognitive Workflow Architecture for Claude Code - Zero dependencies, pure Node.js",
   "main": "index.js",
   "bin": {
     "create-mighty-architect": "./bin/install.js"
@@ -9,9 +9,36 @@
   "scripts": {
     "test": "node test/run-tests.js"
   },
-  "keywords": ["claude-code", "plugin", "memory", "architecture", "workflow"],
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/mighty-architect.git"
+  },
+  "keywords": [
+    "claude-code",
+    "plugin",
+    "memory",
+    "architecture",
+    "workflow",
+    "ai-assistant",
+    "nodejs",
+    "cross-platform",
+    "windsurf",
+    "meta-cognitive"
+  ],
+  "author": "Claude Code Community",
   "license": "Apache-2.0",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "files": [
+    "bin/",
+    "hooks/",
+    "skills/",
+    "templates/",
+    "commands/",
+    "README.md",
+    "LICENSE"
+  ],
   "dependencies": {},
   "devDependencies": {}
 }

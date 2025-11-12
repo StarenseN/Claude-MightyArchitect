@@ -1,0 +1,10 @@
+node_modules/
+test/
+.git/
+.github/
+*.log
+test-output/
+/tmp/
+Docs/
+docs/plans/
+.gitignore

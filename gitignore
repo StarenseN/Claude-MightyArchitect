@@ -1,0 +1,33 @@
+# Claude Memory System - Git Ignore
+
+# Local testing
+.memory/
+test-project/
+
+# PowerShell
+*.ps1xml
+*.psc1
+*.psd1
+*.psm1.bak
+
+# TypeScript
+node_modules/
+*.js
+*.js.map
+*.d.ts
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+
+# Backup files
+*.bak
+*.tmp

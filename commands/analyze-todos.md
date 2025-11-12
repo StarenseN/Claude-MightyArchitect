@@ -7,7 +7,7 @@ You are being asked to analyze recently completed todos and create intelligent t
 ## Instructions
 
 1. **Ask user for completed todos**
-   - If user hasn't provided specific todos, ask: "Please provide the completed todos you want analyzed (or say 'all recent' to analyze everything)"
+   - If user hasn't provided specific todos, ask: "Please provide the completed todos you want analyzed (or say 'all recent' to analyze todos completed in the current session)"
 
 2. **Read current context**
    - Read `.claude/memory/activeContext.md` to understand current project focus
@@ -15,7 +15,7 @@ You are being asked to analyze recently completed todos and create intelligent t
 
 3. **List recent task logs**
    - Check `.claude/memory/tasks/` directory
-   - Get list of files created in last 24 hours (for duplicate detection)
+   - Get list of 10 most recent files (for duplicate detection). If directory doesn't exist, note it's empty.
 
 4. **Prepare agent input**
    - Format completed todos as markdown list
@@ -31,6 +31,26 @@ You are being asked to analyze recently completed todos and create intelligent t
    - Summarize what task logs were created
    - Show the 23-point scores
    - Inform user where logs were saved
+
+## Error Handling
+
+**If activeContext.md doesn't exist:**
+- Proceed with minimal context (as noted in step 2)
+
+**If .claude/memory/tasks/ doesn't exist:**
+- Inform user: "Tasks directory not found. The task-manager agent will create it when generating logs."
+
+**If Task tool fails:**
+- Explain error to user and suggest running command again
+
+**No completed todos:**
+- Inform user: "No recently completed todos found. Complete some todos first using TodoWrite."
+
+**Empty context:**
+- Proceed with generic analysis (agent handles this)
+
+**No recent logs:**
+- Proceed normally (no duplicates to check)
 
 ## Example Usage
 

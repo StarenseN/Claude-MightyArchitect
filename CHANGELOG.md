@@ -53,7 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Memory structure must be manually cleaned if corrupted
 
 ### Credits
-- Based on Windsurf's Meta-Cognitive Workflow Architecture
+- Based on Entrepreneur4lyf's Meta-Cognitive Workflow Architecture
 - Optimized for Claude Code with dramatic token efficiency improvements
 - Built using TDD approach with Superpowers framework
 

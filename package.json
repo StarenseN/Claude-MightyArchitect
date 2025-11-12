@@ -1,7 +1,7 @@
 {
   "name": "mighty-architect",
   "version": "1.0.0",
-  "description": "Port of Windsurf Meta-Cognitive Workflow Architecture for Claude Code - Zero dependencies, pure Node.js",
+  "description": "Port of Entrepreneur4lyf's Meta-Cognitive Workflow Architecture for Claude Code - Zero dependencies, pure Node.js",
   "main": "index.js",
   "bin": {
     "create-mighty-architect": "./bin/install.js"

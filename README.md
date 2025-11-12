@@ -2,7 +2,7 @@
 
 # 🏗️ MightyArchitect
 
-### Port of Windsurf's Meta-Cognitive Workflow Architecture for Claude Code
+### Port of Entrepreneur4lyf's Meta-Cognitive Workflow Architecture for Claude Code
 
 *Intelligent memory system that learns from your code*
 
@@ -21,7 +21,7 @@
 
 MightyArchitect transforms Claude Code into an **intelligent development partner** with persistent memory that:
 
-- 📝 **Remembers your context** across sessions (~800 tokens vs Windsurf's 3000+)
+- 📝 **Remembers your context** across sessions (~800 tokens vs original's 3000+)
 - 🏗️ **Analyzes your architecture** automatically on significant commits
 - 🎯 **Scores code quality** objectively using a 23-point system
 - 📚 **Builds knowledge** by documenting patterns and decisions
@@ -75,9 +75,9 @@ Objective code quality scoring:
 <td>
 
 ### ⚡ Token Efficient
-**73% reduction** from Windsurf:
+**73% reduction** from original:
 - MightyArchitect: ~800 tokens
-- Windsurf: ~3000+ tokens
+- Original: ~3000+ tokens
 - Selective loading strategy
 
 </td>
@@ -219,7 +219,25 @@ Implementing user authentication system
 
 ---
 
-## 🔄 Automatic Workflow
+## 🤖 What's Automatic vs Manual?
+
+Understanding what MightyArchitect does automatically vs when you need to take action:
+
+| Action | Type | When | Platform |
+|--------|------|------|----------|
+| **Memory Loading** | ✅ Automatic | Session start | macOS/Linux |
+| **Memory Loading** | ⚡ Manual | Session start | Windows (bug workaround) |
+| **Commit Detection** | ✅ Automatic | After git commit | All platforms |
+| **Analysis Notification** | ✅ Automatic | When 3+ files changed | All platforms |
+| **Architectural Review** | 📝 Manual | When notified | Run `/architect-review` |
+| **Task Log Reminder** | ✅ Automatic | Session end | All platforms |
+| **Memory Updates** | 📝 Manual | When you want | Edit markdown files |
+
+**Key Point**: The hook **detects and notifies** you automatically, but the **analysis runs** when you execute `/architect-review`. This gives you control over when to spend time on architectural review.
+
+---
+
+## 🔄 Workflow Example
 
 ### 1️⃣ Session Start
 
@@ -247,7 +265,7 @@ Code normally with Claude. Memory provides context automatically.
 git commit -m "feat: add JWT authentication middleware"
 ```
 
-**Automatic trigger**:
+**Automatic notification** (PostToolUse hook):
 ```
 🏗️ MightyArchitect Analysis Triggered
 
@@ -258,8 +276,11 @@ Action Required: Review patterns and update knowledge base.
 Run: /architect-review
 ```
 
-### 4️⃣ Architect Review
+> 💡 **Note**: The hook automatically *detects* significant commits (feat/refactor/perf with 3+ files) and *notifies* you. The actual analysis runs when you execute `/architect-review`.
 
+### 4️⃣ Architect Review (Manual)
+
+Run the command:
 ```
 /architect-review
 ```
@@ -727,8 +748,8 @@ npm test
 
 ## 📊 Comparison
 
-| Feature | MightyArchitect | Windsurf | Claude Code (vanilla) |
-|---------|----------------|----------|----------------------|
+| Feature | MightyArchitect | Original (Windsurf) | Claude Code (vanilla) |
+|---------|----------------|---------------------|----------------------|
 | **Memory System** | ✅ 3-layer | ✅ Full repo context | ❌ None |
 | **Token Usage** | 🟢 ~800 | 🟡 ~3000+ | 🟢 0 |
 | **Auto Analysis** | ✅ On commits | ✅ Always-on | ❌ Manual |
@@ -742,7 +763,7 @@ npm test
 
 ## 🙏 Credits
 
-- **Inspired by**: [Windsurf's Meta-Cognitive Workflow Architecture](https://docs.codeium.com/windsurf/overview)
+- **Inspired by**: [Entrepreneur4lyf's Meta-Cognitive Workflow Architecture](https://github.com/entrepeneur4lyf/engineered-meta-cognitive-workflow-architecture)
 - **Built with**: [Claude Code](https://claude.ai/code) by Anthropic
 - **Development approach**: [Superpowers](https://github.com/superpowers-framework) TDD framework
 - **Created by**: Claude & StarenseN

@@ -125,28 +125,34 @@ Understand legacy codebases:
 
 ### Installation
 
-**Option 1: From npm** (recommended):
 ```bash
 npx create-mighty-architect
 ```
 
-**Option 2: From GitHub** (if npm not available):
-```bash
-npx github:StarenseN/Claude-MightyArchitect
-```
-
-**Option 3: Manual Installation**:
-```bash
-git clone https://github.com/StarenseN/Claude-MightyArchitect.git
-cd Claude-MightyArchitect
-node bin/install.js
-```
-
 **That's it!** The installer will:
 1. ✅ Copy plugin files to `~/.claude/plugins/mighty-architect/`
-2. ✅ Register hooks in `~/.claude/settings.json`
-3. ✅ Ask about auto-initialization preference
-4. ✅ Set up memory templates
+2. ✅ Install commands to `~/.claude/commands/`
+3. ✅ Register hooks in `~/.claude/settings.json`
+4. ✅ Ask about auto-initialization preference
+5. ✅ Set up memory templates
+
+#### Alternative: Manual Installation
+
+For development or testing from source:
+
+```bash
+# Clone repository
+git clone https://github.com/StarenseN/Claude-MightyArchitect.git
+cd Claude-MightyArchitect
+
+# Install globally
+npm install -g .
+
+# Or link for development
+npm link
+```
+
+This installs the same way as `npx create-mighty-architect`.
 
 ### First Use
 
@@ -161,10 +167,17 @@ claude
 ```bash
 cd your-project
 claude
-/activate-mighty-architect  # Run once per session
+/power-up  # Recommended: Activates everything at once
 ```
 
-> 💡 **Tip**: Add `/activate-mighty-architect` to your `/power-up` command for automatic activation
+Or individually:
+```bash
+/activate-mighty-architect  # Load memory system only
+/activate-superpowers       # Load Superpowers skills only
+/sync-memory                # Sync episodic memory
+```
+
+> 💡 **Windows Tip**: The `/power-up` command is a convenient all-in-one activation that runs all three commands above. It's been pre-installed for you!
 
 ---
 
@@ -526,6 +539,55 @@ Analyze git history to understand project evolution and architectural decisions:
 - Finding technical debt accumulation points
 
 **Perfect for**: Taking over inherited codebases, onboarding to existing projects, or conducting architectural archaeology.
+
+### `/bootstrap`
+
+Interactive workflow to bootstrap MightyArchitect on existing legacy projects:
+
+```bash
+/bootstrap
+```
+
+**What it does**:
+- **Phase 1**: Automated codebase analysis (explores structure, identifies 5-7 patterns)
+- **Phase 2**: Interactive Q&A (asks you to explain "why" behind decisions)
+- **Phase 3**: Initializes memory system with captured knowledge
+
+**Use when**:
+- First time using MightyArchitect on existing project
+- Project has no documentation
+- You want to capture tribal knowledge before it's lost
+- Onboarding new team members
+
+**Combines with**: `/forensic` (analyzes git history) + `/bootstrap` (analyzes code structure) = comprehensive project understanding.
+
+### Windows Workaround Commands
+
+Due to [SessionStart hook bug #9542](https://github.com/anthropics/claude-code/issues/9542), Windows users need manual activation:
+
+#### `/power-up` (Recommended)
+```bash
+/power-up
+```
+Activates everything at once:
+- ✅ MightyArchitect memory system
+- ✅ Superpowers skills framework
+- ✅ Episodic memory sync
+
+**Run this at the start of each session.**
+
+#### Individual Commands
+
+If you prefer granular control:
+
+```bash
+/activate-mighty-architect  # Load memory system only
+/activate-superpowers       # Load Superpowers skills only
+/sync-memory                # Sync episodic memory only
+/test-hooks                 # Verify hooks are working
+```
+
+**macOS/Linux users**: These commands are unnecessary - SessionStart hooks work automatically.
 
 ---
 

@@ -59,6 +59,24 @@ try {
     process.exit(1);
   }
 
+  // Test 4: Script installs commands to global directory
+  console.log('Test 4: Script installs commands globally...');
+  const commandsDir = path.join(testHome, '.claude', 'commands');
+  const forensicCmd = path.join(commandsDir, 'forensic.md');
+  const bootstrapCmd = path.join(commandsDir, 'bootstrap.md');
+  const architectCmd = path.join(commandsDir, 'architect-review.md');
+
+  if (fs.existsSync(commandsDir) && fs.existsSync(forensicCmd) && fs.existsSync(bootstrapCmd) && fs.existsSync(architectCmd)) {
+    console.log('✓ Test 4 passed: Commands installed to ~/.claude/commands/');
+  } else {
+    console.log('✗ Test 4 failed: Commands not in global directory');
+    console.log('  Commands dir exists:', fs.existsSync(commandsDir));
+    console.log('  forensic.md exists:', fs.existsSync(forensicCmd));
+    console.log('  bootstrap.md exists:', fs.existsSync(bootstrapCmd));
+    console.log('  architect-review.md exists:', fs.existsSync(architectCmd));
+    process.exit(1);
+  }
+
   console.log('All tests passed!');
 } catch (error) {
   console.log('✗ Test failed with error:', error.message);

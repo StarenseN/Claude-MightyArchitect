@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+- **Installer Bug**: Commands now install to `~/.claude/commands/` (global directory) instead of plugin directory
+  - Fixed `bin/install.js` to correctly copy commands to global location
+  - Commands are now accessible after installation: `/forensic`, `/bootstrap`, `/architect-review`, `/memory-status`
+  - Added test verification for command installation location
+
+### Added
+- **Manual Installation Documentation**: Added alternative installation methods in README
+  - Instructions for installing from source (`npm install -g .`)
+  - Development workflow with `npm link`
+- **Windows Workaround Documentation**: Comprehensive documentation for Windows users
+  - `/power-up` command for all-in-one activation
+  - Individual activation commands documented
+  - Clear explanation of SessionStart hook bug #9542
+- **Bootstrap Command Documentation**: Added `/bootstrap` command to manual commands section
+- **PUBLISH_CHECKLIST.md**: Complete pre-publish checklist for npm publishing
+
+### Changed
+- Improved installer success message with available commands and Windows tips
+- Enhanced test suite with command installation verification (Test 4)
+- Updated README with better installation flow and Windows workaround instructions
+
 ## [1.1.0] - 2025-11-12
 
 ### Added

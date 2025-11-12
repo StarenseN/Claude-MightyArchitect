@@ -121,11 +121,18 @@ async function install() {
   // Step 2: Copy files
   log('\n2. Copying plugin files...', 'yellow');
   const sourceDir = path.join(__dirname, '..');
+
+  // Copy plugin files (hooks, templates, skills)
   copyDir(path.join(sourceDir, 'templates'), path.join(PLUGIN_DIR, 'templates'));
   copyDir(path.join(sourceDir, 'hooks'), path.join(PLUGIN_DIR, 'hooks'));
   copyDir(path.join(sourceDir, 'skills'), path.join(PLUGIN_DIR, 'skills'));
-  copyDir(path.join(sourceDir, 'commands'), path.join(PLUGIN_DIR, 'commands'));
-  log('   ✓ Files copied', 'green');
+  log('   ✓ Plugin files copied', 'green');
+
+  // Copy commands to global commands directory
+  const COMMANDS_DIR = path.join(CLAUDE_DIR, 'commands');
+  fs.mkdirSync(COMMANDS_DIR, { recursive: true });
+  copyDir(path.join(sourceDir, 'commands'), COMMANDS_DIR);
+  log('   ✓ Commands installed globally', 'green');
 
   // Step 3: Configure auto-init
   log('\n3. Configuring preferences...', 'yellow');
@@ -142,8 +149,10 @@ async function install() {
   log('  ✓ Auto-initializes in new projects');
   log('\nUsage:', 'yellow');
   log('  • Start Claude in any project: Memory system initializes automatically');
-  log('  • Manual review: Use /architect-review command');
+  log('  • Available commands: /architect-review, /forensic, /bootstrap, /memory-status');
   log('  • View memory: Check .claude/memory/ directory');
+  log('\nWindows Users:', 'yellow');
+  log('  • Run /power-up at session start (SessionStart hook workaround)');
   log('\nDocumentation: https://github.com/StarenseN/Claude-MightyArchitect\n');
 }
 

@@ -121,6 +121,10 @@ Change `autoInit` to `false` to disable auto-initialization.
 - [Architecture](docs/ARCHITECTURE.md) - System design and technical decisions
 - [Usage Guide](docs/USAGE.md) - Detailed usage examples and workflows
 
+## Repository
+
+[https://github.com/StarenseN/Claude-MightyArchitect](https://github.com/StarenseN/Claude-MightyArchitect)
+
 ## License
 
 Apache 2.0 - See LICENSE file

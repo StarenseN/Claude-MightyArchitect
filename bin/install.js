@@ -144,7 +144,7 @@ async function install() {
   log('  • Start Claude in any project: Memory system initializes automatically');
   log('  • Manual review: Use /architect-review command');
   log('  • View memory: Check .claude/memory/ directory');
-  log('\nDocumentation: https://github.com/your-repo/mighty-architect\n');
+  log('\nDocumentation: https://github.com/StarenseN/Claude-MightyArchitect\n');
 }
 
 // Run installation

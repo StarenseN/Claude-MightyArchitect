@@ -57,4 +57,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Optimized for Claude Code with dramatic token efficiency improvements
 - Built using TDD approach with Superpowers framework
 
-[1.0.0]: https://github.com/your-username/mighty-architect/releases/tag/v1.0.0
+[1.0.0]: https://github.com/StarenseN/Claude-MightyArchitect/releases/tag/v1.0.0

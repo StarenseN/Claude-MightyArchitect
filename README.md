@@ -20,6 +20,21 @@ npx create-mighty-architect
 
 Follow the prompts to configure auto-initialization.
 
+### Windows Users - Important Note! 🪟
+
+Due to a Windows bug in Claude Code's SessionStart hooks (GitHub issue #9542), memory doesn't auto-load on session start. Use this workaround:
+
+**Quick Fix**: Run this at the start of each session:
+```
+/activate-mighty-architect
+```
+
+Or add it to your `/power-up` command if you use one.
+
+**What still works**: Git commit analysis and task reminders work perfectly!
+
+**Full details**: See [WINDOWS-WORKAROUND.md](docs/WINDOWS-WORKAROUND.md)
+
 ## How It Works
 
 ### Memory Structure

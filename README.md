@@ -632,6 +632,56 @@ cat ~/.claude/settings.json | grep -A 5 TodoWrite
 
 **Full documentation**: See [`docs/plans/2025-11-12-todowrite-integration.md`](docs/plans/2025-11-12-todowrite-integration.md)
 
+### `/analyze-todos`
+
+Analyze completed todos using semantic understanding and create intelligent task logs with 23-point quality scoring:
+
+```bash
+/analyze-todos
+```
+
+**What it does**:
+- Collects your recently completed todos
+- Reads current context from `.claude/memory/activeContext.md`
+- Invokes the task-manager agent to perform semantic analysis
+- Creates task logs in `.claude/memory/tasks/` with 23-point quality scores
+
+**Example workflow**:
+
+```
+User: "Add authentication to the API"
+Claude: [Creates and completes todos for auth implementation]
+User: "/analyze-todos"
+Claude: "I'll analyze your completed todos..."
+[Agent runs semantic analysis]
+Claude: "Created 2 task logs:
+- auth-core.md (Score: 18/23)
+- auth-api.md (Score: 20/23)"
+```
+
+**Task Log Format**:
+
+Each log includes:
+- Context and goal
+- List of completed todos
+- Implementation summary
+- Quality assessment (23-point scale across 5 dimensions)
+- Files modified
+- Next steps
+
+**Semantic Grouping**:
+
+The agent groups todos by thematic coherence, NOT by arbitrary patterns:
+- ✅ Related feature work = one log
+- ✅ Multiple distinct features = multiple logs
+- ❌ Batches don't dictate boundaries
+
+**Use when**:
+- After completing todos (Vibe Coding or Superpowers Execute-Plan)
+- You want intelligent task documentation
+- You prefer semi-automatic workflow (manual trigger, automatic analysis)
+
+
 ### Windows Workaround Commands
 
 Due to [SessionStart hook bug #9542](https://github.com/anthropics/claude-code/issues/9542), Windows users need manual activation:

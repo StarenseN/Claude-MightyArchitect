@@ -552,6 +552,53 @@ See complete workflow in [examples/rest-api-workflow.md](../examples/rest-api-wo
 
 See complete workflow in [examples/refactoring-workflow.md](../examples/refactoring-workflow.md)
 
+
+## Semantic Task Analysis
+
+### Using `/analyze-todos`
+
+After completing todos (either through Vibe Coding or Superpowers Execute-Plan), run:
+
+```
+/analyze-todos
+```
+
+**What it does:**
+1. Collects your recently completed todos
+2. Reads current context from `.claude/memory/activeContext.md`
+3. Invokes the task-manager agent to perform semantic analysis
+4. Creates task logs in `.claude/memory/tasks/` with 23-point quality scores
+
+**Example workflow:**
+
+```
+User: "Add authentication to the API"
+Claude: [Creates and completes todos for auth implementation]
+User: "/analyze-todos"
+Claude: "I'll analyze your completed todos..."
+[Agent runs semantic analysis]
+Claude: "Created 2 task logs:
+- auth-core.md (Score: 18/23)
+- auth-api.md (Score: 20/23)"
+```
+
+**Task Log Format:**
+
+Each log includes:
+- Context and goal
+- List of completed todos
+- Implementation summary
+- Quality assessment (23-point scale across 5 dimensions)
+- Files modified
+- Next steps
+
+**Semantic Grouping:**
+
+The agent groups todos by thematic coherence, NOT by arbitrary patterns:
+- ✅ Related feature work = one log
+- ✅ Multiple distinct features = multiple logs
+- ❌ Batches don't dictate boundaries
+
 ## Getting Help
 
 - **Documentation**: This guide + [ARCHITECTURE.md](ARCHITECTURE.md)

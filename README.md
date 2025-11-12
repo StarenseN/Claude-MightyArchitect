@@ -561,6 +561,77 @@ Interactive workflow to bootstrap MightyArchitect on existing legacy projects:
 
 **Combines with**: `/forensic` (analyzes git history) + `/bootstrap` (analyzes code structure) = comprehensive project understanding.
 
+### `/register-todowrite-hook` ⭐ NEW
+
+Enable automatic task log creation when you complete todos:
+
+```bash
+/register-todowrite-hook
+```
+
+**What it does**:
+- Registers a PreToolUse hook that intercepts Claude's native TodoWrite operations
+- Automatically creates task logs in `.claude/memory/tasks/` when todos complete
+- **Flexible granularity**:
+  - **1 todo completed** = 1 task log (for standalone work)
+  - **1 theme completed** (group of related todos) = 1 task log (for planned work)
+
+**How it works**:
+
+**Scenario 1: Single Todo**
+```
+You: "Fix the login bug"
+Claude: [Creates todo] "Fix login bug"
+        [Completes work, marks todo completed]
+→ Task log auto-created: .claude/memory/tasks/2025-11-12-fix-login-bug.md
+```
+
+**Scenario 2: Thematic Batch (from a plan)**
+```
+You: "/superpowers:execute-plan docs/plans/jwt-auth.md"
+Claude: [Creates 3 todos]
+        1. "Create user model with password hashing"
+        2. "Add JWT token generation"
+        3. "Implement auth middleware"
+        [Completes all 3, marks as completed]
+→ Task log auto-created: .claude/memory/tasks/2025-11-12-jwt-authentication.md
+  (1 log for the entire theme, not 3 separate logs)
+```
+
+**Smart Detection**:
+- Analyzes todo content patterns to detect if part of a plan
+- Groups related todos into themes automatically
+- Waits for theme completion before creating log
+- No manual intervention required
+
+**Benefits**:
+- ✅ Works with Claude's native TodoWrite (Ctrl+T)
+- ✅ No forced batch sizes (3, 5, etc.)
+- ✅ Semantic grouping by themes, not arbitrary numbers
+- ✅ Automatic documentation of all work
+- ✅ Integrates seamlessly with Superpowers execute-plan
+
+**Use when**:
+- You want automatic task logs without manual commands
+- You're using Superpowers to execute plans
+- You want flexible granularity (1 todo OR 1 theme)
+- You prefer natural workflow over forced batching
+
+**Technical Note**: Uses PreToolUse TodoWrite matcher (undocumented feature, see [GitHub Issue #6975](https://github.com/anthropics/claude-code/issues/6975))
+
+**Verification**:
+```bash
+# Check hook is registered
+cat ~/.claude/settings.json | grep -A 5 TodoWrite
+
+# Test it
+# 1. Create a todo (Ctrl+T)
+# 2. Complete the todo
+# 3. Check: ls -la .claude/memory/tasks/
+```
+
+**Full documentation**: See [`docs/plans/2025-11-12-todowrite-integration.md`](docs/plans/2025-11-12-todowrite-integration.md)
+
 ### Windows Workaround Commands
 
 Due to [SessionStart hook bug #9542](https://github.com/anthropics/claude-code/issues/9542), Windows users need manual activation:

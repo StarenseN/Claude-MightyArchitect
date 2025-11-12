@@ -7,13 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Fixed
-- **Installer Bug**: Commands now install to `~/.claude/commands/` (global directory) instead of plugin directory
-  - Fixed `bin/install.js` to correctly copy commands to global location
-  - Commands are now accessible after installation: `/forensic`, `/bootstrap`, `/architect-review`, `/memory-status`
-  - Added test verification for command installation location
-
 ### Added
+- **TodoWrite-Based Automatic Task Logging** ⭐ NEW
+  - PreToolUse hook intercepts Claude's native TodoWrite operations
+  - Automatic task log creation with flexible granularity:
+    - **1 todo completed** = 1 task log (standalone work)
+    - **1 theme completed** (group of related todos) = 1 task log (planned work)
+  - Smart theme detection:
+    - Sequential "Task X:" patterns automatically grouped
+    - Word overlap heuristic for related todos
+    - Waits for theme completion before creating log
+  - `/register-todowrite-hook` command for easy setup
+  - Full test suite with 4 comprehensive tests
+  - Integration with Superpowers execute-plan workflow
+  - See [`docs/plans/2025-11-12-todowrite-integration.md`](docs/plans/2025-11-12-todowrite-integration.md) for details
+  - Based on undocumented feature: [GitHub Issue #6975](https://github.com/anthropics/claude-code/issues/6975)
+
+- **Knowledge Base Templates**: Initialize with guidance
+  - `patterns.md` template with pattern documentation structure
+  - `decisions.md` template for architectural decisions
+  - `evolution.md` template for project timeline (populated by `/forensic`)
+  - Copied automatically during session-start initialization
+
 - **Manual Installation Documentation**: Added alternative installation methods in README
   - Instructions for installing from source (`npm install -g .`)
   - Development workflow with `npm link`
@@ -24,10 +39,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Bootstrap Command Documentation**: Added `/bootstrap` command to manual commands section
 - **PUBLISH_CHECKLIST.md**: Complete pre-publish checklist for npm publishing
 
+### Fixed
+- **Installer Bug**: Commands now install to `~/.claude/commands/` (global directory) instead of plugin directory
+  - Fixed `bin/install.js` to correctly copy commands to global location
+  - Commands are now accessible after installation: `/forensic`, `/bootstrap`, `/architect-review`, `/memory-status`
+  - Added test verification for command installation location
+
 ### Changed
+- Session-start hook now copies knowledge base templates during initialization
+- `activate-mighty-architect` command updated to include knowledge templates
 - Improved installer success message with available commands and Windows tips
 - Enhanced test suite with command installation verification (Test 4)
 - Updated README with better installation flow and Windows workaround instructions
+- Added TodoWrite hook test suite (`test/test-todowrite-hook.js`)
 
 ## [1.1.0] - 2025-11-12
 

@@ -7,7 +7,8 @@
     "create-mighty-architect": "./bin/install.js"
   },
   "scripts": {
-    "test": "node test/run-tests.js"
+    "test": "node test/run-tests.js",
+    "dev:sync": "node bin/dev-sync.js"
   },
   "repository": {
     "type": "git",

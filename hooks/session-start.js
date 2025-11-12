@@ -46,6 +46,7 @@ function main() {
       const templateDir = path.join(HOME, '.claude', 'plugins', 'mighty-architect', 'templates');
 
       if (fs.existsSync(templateDir)) {
+        // Copy working memory templates
         fs.copyFileSync(
           path.join(templateDir, 'activeContext.md'),
           path.join(MEMORY_DIR, 'activeContext.md')
@@ -54,10 +55,25 @@ function main() {
           path.join(templateDir, 'architect.md'),
           path.join(MEMORY_DIR, 'architect.md')
         );
+
+        // Copy knowledge base templates
+        const knowledgeTemplates = ['patterns.md', 'decisions.md', 'evolution.md'];
+        for (const template of knowledgeTemplates) {
+          const templatePath = path.join(templateDir, template);
+          if (fs.existsSync(templatePath)) {
+            fs.copyFileSync(
+              templatePath,
+              path.join(MEMORY_DIR, 'knowledge', template)
+            );
+          }
+        }
       } else {
         // Fallback: create minimal files
         fs.writeFileSync(path.join(MEMORY_DIR, 'activeContext.md'), '# Active Context\n');
         fs.writeFileSync(path.join(MEMORY_DIR, 'architect.md'), '# Architect\n');
+        fs.writeFileSync(path.join(MEMORY_DIR, 'knowledge', 'patterns.md'), '# Architectural Patterns\n');
+        fs.writeFileSync(path.join(MEMORY_DIR, 'knowledge', 'decisions.md'), '# Architectural Decisions\n');
+        fs.writeFileSync(path.join(MEMORY_DIR, 'knowledge', 'evolution.md'), '# Project Evolution\n');
       }
 
       console.error('✓ MightyArchitect memory structure initialized');

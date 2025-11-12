@@ -27,6 +27,9 @@ Copy templates from the plugin directory:
 ```bash
 cp ~/.claude/plugins/mighty-architect/templates/activeContext.md .claude/memory/
 cp ~/.claude/plugins/mighty-architect/templates/architect.md .claude/memory/
+cp ~/.claude/plugins/mighty-architect/templates/patterns.md .claude/memory/knowledge/
+cp ~/.claude/plugins/mighty-architect/templates/decisions.md .claude/memory/knowledge/
+cp ~/.claude/plugins/mighty-architect/templates/evolution.md .claude/memory/knowledge/
 ```
 
 If templates don't exist (fallback):
@@ -34,6 +37,9 @@ If templates don't exist (fallback):
 ```bash
 [ ! -f .claude/memory/activeContext.md ] && echo "# Active Context" > .claude/memory/activeContext.md
 [ ! -f .claude/memory/architect.md ] && echo "# Architect" > .claude/memory/architect.md
+[ ! -f .claude/memory/knowledge/patterns.md ] && echo "# Architectural Patterns" > .claude/memory/knowledge/patterns.md
+[ ! -f .claude/memory/knowledge/decisions.md ] && echo "# Architectural Decisions" > .claude/memory/knowledge/decisions.md
+[ ! -f .claude/memory/knowledge/evolution.md ] && echo "# Project Evolution" > .claude/memory/knowledge/evolution.md
 ```
 
 Structure created:
@@ -41,6 +47,9 @@ Structure created:
 - `.claude/memory/architect.md` ✅
 - `.claude/memory/tasks/` ✅
 - `.claude/memory/knowledge/` ✅
+  - `patterns.md` ✅
+  - `decisions.md` ✅
+  - `evolution.md` ✅
 
 ## Step 3: Load Memory Files
 

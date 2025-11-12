@@ -16,11 +16,12 @@ if (!fs.existsSync(skillFile)) {
 console.log('✓ Test 1 passed: SKILL.md exists');
 
 const content = fs.readFileSync(skillFile, 'utf8');
-const lines = content.split('\n');
+const lines = content.split('\n').map(line => line.trim());
 
 // Test 2: Skill has valid YAML frontmatter
 if (lines[0] !== '---') {
   console.log('✗ Test 2 failed: Missing YAML frontmatter start');
+  console.log('  First line:', JSON.stringify(lines[0]));
   process.exit(1);
 }
 console.log('✓ Test 2 passed: YAML frontmatter starts correctly');

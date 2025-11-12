@@ -124,6 +124,7 @@ async function install() {
   copyDir(path.join(sourceDir, 'templates'), path.join(PLUGIN_DIR, 'templates'));
   copyDir(path.join(sourceDir, 'hooks'), path.join(PLUGIN_DIR, 'hooks'));
   copyDir(path.join(sourceDir, 'skills'), path.join(PLUGIN_DIR, 'skills'));
+  copyDir(path.join(sourceDir, 'commands'), path.join(PLUGIN_DIR, 'commands'));
   log('   ✓ Files copied', 'green');
 
   // Step 3: Configure auto-init

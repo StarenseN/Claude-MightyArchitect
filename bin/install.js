@@ -52,7 +52,7 @@ function updateSettings(autoInit) {
   // Add MightyArchitect config
   settings.mightyArchitect = {
     autoInit: autoInit,
-    version: '1.0.0',
+    version: '1.1.0',
     installedAt: new Date().toISOString()
   };
 

@@ -60,4 +60,4 @@ When evaluating code quality, expect these practices to be followed. High scores
 - <18 = Unacceptable (requires remediation)
 
 ---
-*MightyArchitect v1.0.0*
+*MightyArchitect v1.1.0*

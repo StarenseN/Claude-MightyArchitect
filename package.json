@@ -1,6 +1,6 @@
 {
   "name": "mighty-architect",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Port of Entrepreneur4lyf's Meta-Cognitive Workflow Architecture for Claude Code - Zero dependencies, pure Node.js",
   "main": "index.js",
   "bin": {

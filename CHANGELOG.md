@@ -5,6 +5,40 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2025-11-12
+
+### Added
+- **Git Forensic Analysis** feature for legacy project bootstrapping
+  - `/forensic` slash command for analyzing git history
+  - `forensic-analysis.md` skill with 6-phase systematic analysis protocol
+  - Timeline construction from architectural commits (feat/refactor/perf)
+  - File hotspot analysis to identify complexity centers
+  - Pattern emergence tracking (when patterns first appeared)
+  - Large commit analysis for architectural inflection points
+  - File age analysis to understand foundation vs recent additions
+  - Author knowledge mapping for tribal knowledge identification
+- `commands/forensic.md` - User-facing documentation with usage modes
+- Updated `BOOTSTRAPPING-EXISTING-PROJECTS.md` with forensic analysis section
+
+### Features
+- **Quick Mode**: Last 3 months history analysis
+- **Deep Mode**: Full repository history from first commit
+- **Focused Mode**: Specific path/subsystem evolution tracking
+- **Interactive**: Asks user to fill in "why" after inferring "what" from commits
+- **Knowledge Base Integration**: Auto-updates evolution.md, patterns.md, decisions.md
+
+### Documentation
+- Comprehensive forensic analysis guide in bootstrapping documentation
+- Example outputs and usage patterns
+- Integration with existing MightyArchitect knowledge system
+
+### Use Cases
+- Understanding legacy codebase evolution
+- Identifying architectural decision points
+- Mapping pattern adoption timeline
+- Finding complexity hotspots requiring refactoring
+- Preparing for major refactors with historical context
+
 ## [1.0.0] - 2025-11-12
 
 ### Added
@@ -57,4 +91,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Optimized for Claude Code with dramatic token efficiency improvements
 - Built using TDD approach with Superpowers framework
 
+[1.1.0]: https://github.com/StarenseN/Claude-MightyArchitect/releases/tag/v1.1.0
 [1.0.0]: https://github.com/StarenseN/Claude-MightyArchitect/releases/tag/v1.0.0

@@ -80,11 +80,11 @@ runHook({
   tool_input: { command: 'git commit -m "feat: add new feature"' }
 })
 .then(output => {
-  if (output.includes('Architect Analysis')) {
-    console.log('✓ Test 1 passed: Triggered on feat: commit');
+  if (output.includes('Analysis Complete')) {
+    console.log('✓ Test 1 passed: Automatic analysis triggered on feat: commit');
     return Promise.resolve();
   } else {
-    console.log('✗ Test 1 failed: Did not trigger on feat:');
+    console.log('✗ Test 1 failed: Did not trigger automatic analysis on feat:');
     console.log('Output:', output);
     process.exit(1);
   }

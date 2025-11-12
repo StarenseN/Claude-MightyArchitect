@@ -53,12 +53,12 @@ Inspired by human cognition:
 </td>
 <td width="50%">
 
-### 🏗️ Automated Architect Analysis
-Triggers on significant commits:
-- Pattern recognition
-- Quality scoring (23 points)
-- Knowledge base updates
-- Trade-off documentation
+### 🏗️ Fully Automated Analysis
+Triggers on significant commits (feat/refactor/perf with 3+ files):
+- Automatic pattern detection
+- Basic quality scoring (15-20/23)
+- Knowledge base auto-updates
+- Optional detailed 23-point review
 
 </td>
 </tr>
@@ -101,6 +101,19 @@ One command installation:
 - Hook registration
 - Template setup
 - Ready in seconds
+
+</td>
+</tr>
+<tr>
+<td colspan="2">
+
+### 🔍 Git Forensic Analysis
+Understand legacy codebases:
+- Timeline reconstruction from commits
+- File hotspot identification
+- Pattern emergence tracking
+- Architectural decision inference
+- Perfect for bootstrapping on existing projects
 
 </td>
 </tr>
@@ -228,12 +241,12 @@ Understanding what MightyArchitect does automatically vs when you need to take a
 | **Memory Loading** | ✅ Automatic | Session start | macOS/Linux |
 | **Memory Loading** | ⚡ Manual | Session start | Windows (bug workaround) |
 | **Commit Detection** | ✅ Automatic | After git commit | All platforms |
-| **Analysis Notification** | ✅ Automatic | When 3+ files changed | All platforms |
-| **Architectural Review** | 📝 Manual | When notified | Run `/architect-review` |
+| **Basic Analysis** | ✅ Automatic | When 3+ files changed (feat/refactor/perf) | All platforms |
+| **Detailed Review** | 📝 Manual (optional) | For full 23-point evaluation | Run `/architect-review` |
 | **Task Log Reminder** | ✅ Automatic | Session end | All platforms |
 | **Memory Updates** | 📝 Manual | When you want | Edit markdown files |
 
-**Key Point**: The hook **detects and notifies** you automatically, but the **analysis runs** when you execute `/architect-review`. This gives you control over when to spend time on architectural review.
+**Key Point**: The hook **automatically analyzes** significant commits (feat/refactor/perf with 3+ files), detecting patterns and updating your knowledge base. For **detailed 23-point evaluation**, run `/architect-review` manually.
 
 ---
 
@@ -265,44 +278,57 @@ Code normally with Claude. Memory provides context automatically.
 git commit -m "feat: add JWT authentication middleware"
 ```
 
-**Automatic notification** (PostToolUse hook):
+**Automatic analysis** (PostToolUse hook):
 ```
-🏗️ MightyArchitect Analysis Triggered
+🏗️  MightyArchitect Analysis Complete (Automatic)
 
-Significant architectural changes detected (5 files).
-Commit: feat: add JWT authentication middleware
+Commit: abc1234 - feat: add JWT authentication middleware
+Files Changed: 5
+Pattern Detected: Middleware/Interceptor Pattern
+Estimated Score: 19/23 (Sufficient)
 
-Action Required: Review patterns and update knowledge base.
-Run: /architect-review
+Knowledge Base Updated:
+✓ .claude/memory/knowledge/patterns.md
+
+💡 Tip: Run /architect-review for detailed analysis with full 23-point evaluation
 ```
 
-> 💡 **Note**: The hook automatically *detects* significant commits (feat/refactor/perf with 3+ files) and *notifies* you. The actual analysis runs when you execute `/architect-review`.
+> 💡 **Note**: The hook automatically *analyzes* significant commits (feat/refactor/perf with 3+ files), detects patterns, calculates a basic score (15-20/23), and updates your knowledge base. For comprehensive 23-point evaluation with detailed rationale, run `/architect-review`.
 
-### 4️⃣ Architect Review (Manual)
+### 4️⃣ Detailed Review (Optional)
 
-Run the command:
+For comprehensive 23-point evaluation with detailed rationale:
 ```
 /architect-review
 ```
 
 **Output**:
 ```
-🏗️ Architectural Analysis Complete
+🏗️ Detailed Architectural Analysis
 
 Commit Analyzed: abc1234 - feat: add JWT authentication middleware
 Quality Score: 20/23 (Sufficient - 87%)
 
+Detailed Breakdown:
+Rewards: +10 elegant, +3 idioms, +2 DRY, +2 edge cases, +1 portable = +18
+Penalties: -1 missing rate limiting = -1
+Net Score: 18 + 2 bonus = 20/23
+
 Key Findings:
 - Pattern: Middleware/interceptor for authentication
 - Clean separation of concerns
+- Comprehensive test coverage (85%)
 - Missing: Rate limiting on auth endpoints
 
 Memory Updated:
-✓ .claude/memory/knowledge/patterns.md
-✓ .claude/memory/knowledge/decisions.md
+✓ .claude/memory/knowledge/patterns.md (detailed evaluation added)
+✓ .claude/memory/knowledge/decisions.md (trade-offs documented)
 
 Recommendation: Add rate limiting to prevent brute force attacks.
+Next Steps: Implement token blacklist for logout, improve error messages
 ```
+
+> 💡 **When to use**: The automatic analysis provides quick pattern detection and basic scoring (15-20/23). Use `/architect-review` when you want detailed breakdown of rewards/penalties, comprehensive trade-off analysis, and actionable recommendations.
 
 ### 5️⃣ Session End
 
@@ -395,15 +421,18 @@ Subtotal: -1
 
 ### `/architect-review`
 
-Manually trigger architectural analysis:
+Manually trigger **detailed** architectural analysis with full 23-point evaluation:
 
 ```
 /architect-review
 ```
 
 **Use when**:
+- You want comprehensive breakdown (not just the automatic basic analysis)
+- You need detailed rewards/penalties explanation
+- You're making critical architectural decisions
+- You want actionable recommendations beyond pattern detection
 - You've made changes but haven't committed yet
-- You want feedback before proceeding
 - You're reviewing someone else's code
 
 ### `/memory-status`
@@ -438,6 +467,52 @@ Blockers: None
 - 8 key decisions recorded
 - Average quality score: 20.3/23 (Sufficient)
 ```
+
+### `/forensic`
+
+Analyze git history to understand project evolution and architectural decisions:
+
+```
+/forensic
+```
+
+**What it does**:
+- Constructs timeline from architectural commits (feat/refactor/perf)
+- Identifies file hotspots (complexity centers needing refactoring)
+- Tracks when patterns first emerged
+- Finds large commits indicating architectural shifts
+- Maps author knowledge distribution
+- Updates knowledge base with evolution insights
+
+**Usage modes**:
+
+```bash
+# Quick mode (last 3 months)
+/forensic
+
+# Deep mode (full history)
+/forensic --deep
+
+# Focus on specific area
+/forensic --path src/api
+
+# Custom timeframe
+/forensic --since "6 months ago"
+
+# Specific author's work
+/forensic --author "john@example.com"
+```
+
+**Output**: Creates `.claude/memory/knowledge/evolution.md` with timeline, hotspots, pattern emergence dates, and inferred architectural decisions. Asks you to fill in "why" after analyzing "what" from commit history.
+
+**Use when**:
+- Bootstrapping MightyArchitect on legacy projects
+- Understanding why the codebase evolved this way
+- Preparing for major refactors (know the history first)
+- Identifying tribal knowledge owners
+- Finding technical debt accumulation points
+
+**Perfect for**: Taking over inherited codebases, onboarding to existing projects, or conducting architectural archaeology.
 
 ---
 
@@ -752,12 +827,13 @@ npm test
 |---------|----------------|---------------------|----------------------|
 | **Memory System** | ✅ 3-layer | ✅ Full repo context | ❌ None |
 | **Token Usage** | 🟢 ~800 | 🟡 ~3000+ | 🟢 0 |
-| **Auto Analysis** | ✅ On commits | ✅ Always-on | ❌ Manual |
-| **Quality Scoring** | ✅ 23-point | ✅ Yes | ❌ Subjective |
+| **Auto Analysis** | ✅ Automatic (on commits) | ✅ Always-on | ❌ Manual |
+| **Pattern Detection** | ✅ Automatic | ✅ Yes | ❌ None |
+| **Quality Scoring** | ✅ 23-point (auto: 15-20, detailed: 21-23) | ✅ Yes | ❌ Subjective |
 | **Zero Dependencies** | ✅ Pure Node.js | ❌ Bash + jq | ✅ Native |
 | **Cross-Platform** | ✅ Win/Mac/Linux | 🟡 macOS/Linux | ✅ All |
 | **Installation** | ⚡ One command | ⚡ One command | 🟢 Built-in |
-| **Knowledge Base** | ✅ Persistent | ✅ Persistent | ❌ None |
+| **Knowledge Base** | ✅ Auto-updated | ✅ Persistent | ❌ None |
 
 ---
 

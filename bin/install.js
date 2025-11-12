@@ -122,10 +122,17 @@ async function install() {
   log('\n2. Copying plugin files...', 'yellow');
   const sourceDir = path.join(__dirname, '..');
 
-  // Copy plugin files (hooks, templates, skills)
+  // Copy plugin files (hooks, templates, skills, agents)
   copyDir(path.join(sourceDir, 'templates'), path.join(PLUGIN_DIR, 'templates'));
   copyDir(path.join(sourceDir, 'hooks'), path.join(PLUGIN_DIR, 'hooks'));
   copyDir(path.join(sourceDir, 'skills'), path.join(PLUGIN_DIR, 'skills'));
+
+  // Copy agents (if exists)
+  const agentsDir = path.join(sourceDir, 'agents');
+  if (fs.existsSync(agentsDir)) {
+    copyDir(agentsDir, path.join(PLUGIN_DIR, 'agents'));
+  }
+
   log('   ✓ Plugin files copied', 'green');
 
   // Copy commands to global commands directory

@@ -53,6 +53,11 @@ console.log('🎯 Skills...');
 copyDir(path.join(sourceDir, 'skills'), path.join(PLUGIN_DIR, 'skills'));
 console.log('   ✓ Skills synced to', path.join(PLUGIN_DIR, 'skills'));
 
+// Sync agents
+console.log('🤖 Agents...');
+copyDir(path.join(sourceDir, 'agents'), path.join(PLUGIN_DIR, 'agents'));
+console.log('   ✓ Agents synced to', path.join(PLUGIN_DIR, 'agents'));
+
 console.log('\n✅ Dev sync complete!');
 console.log('💡 Changes are now available in Claude Code');
 console.log('⚠️  You may need to restart Claude session for some changes');

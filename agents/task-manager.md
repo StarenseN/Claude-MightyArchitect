@@ -50,6 +50,23 @@ Your analysis in this format:
 
 Then create task logs for complete themes.
 
+## How to Create Task Logs
+
+Use the Write tool to create each task log:
+
+1. **Construct filename:**
+   - Format: `.claude/memory/tasks/YYYYMMDD-HHMMSS-{sanitized-theme-name}.md`
+   - Sanitize theme name: lowercase, replace spaces with hyphens, remove special chars
+   - Example: "Dark Mode Feature" → `20251112-143022-dark-mode-feature.md`
+
+2. **Write file using Write tool:**
+   - file_path: `.claude/memory/tasks/{filename}`
+   - content: Follow Task Log Format template below
+
+3. **Error handling:**
+   - If `.claude/memory/tasks/` doesn't exist, inform user
+   - If filename collision, append `-2`, `-3`, etc.
+
 ## Semantic Analysis Guidelines
 
 ### Domain Detection
@@ -67,6 +84,15 @@ Ask: Would a developer describe these as "one task" or "separate tasks"?
 **NOT coherent:**
 - ❌ "Task 1, Task 2, Task 3" (just because batched together)
 - ❌ Different features bundled by timestamp
+
+### Edge Cases for Thematic Coherence
+
+**Mixed-domain simultaneous completions:**
+- ✅ "Add login form" + "Add signup form" = 1 log (both auth forms)
+- ✅ "Add login form" + "Fix navbar bug" = 2 logs (unrelated features)
+- ✅ "Refactor Parser" + "Add Parser tests" = 1 log (quality improvement for Parser)
+
+**When in doubt:** Ask yourself "Would a PR reviewer see these as one logical change?"
 
 ### Completeness Check
 - Are there pending todos related to this theme?
@@ -106,7 +132,22 @@ Evaluate EACH complete theme:
 
 ## Task Log Format
 
-Create file: `.claude/memory/tasks/YYYYMMDD-HHMMSS-theme-name.md`
+### Filename Convention
+
+```
+.claude/memory/tasks/YYYYMMDD-HHMMSS-theme-name.md
+```
+
+**Sanitization rules:**
+1. Convert theme name to lowercase
+2. Replace spaces with hyphens
+3. Remove all characters except: a-z, 0-9, hyphens
+4. Strip leading/trailing hyphens
+5. Truncate to 50 characters max
+
+Example: "Task 1: Add User Auth" → "task-1-add-user-auth"
+
+### Template
 
 ```markdown
 # [Theme Name]

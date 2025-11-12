@@ -125,8 +125,21 @@ Understand legacy codebases:
 
 ### Installation
 
+**Option 1: From npm** (recommended):
 ```bash
 npx create-mighty-architect
+```
+
+**Option 2: From GitHub** (if npm not available):
+```bash
+npx github:StarenseN/Claude-MightyArchitect
+```
+
+**Option 3: Manual Installation**:
+```bash
+git clone https://github.com/StarenseN/Claude-MightyArchitect.git
+cd Claude-MightyArchitect
+node bin/install.js
 ```
 
 **That's it!** The installer will:

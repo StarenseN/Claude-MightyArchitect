@@ -22,8 +22,25 @@ process.stdin.on('end', () => {
 });
 
 function detectStructureVersion() {
+  // Check for version file first
+  const versionFile = path.join(MEMORY_DIR, '.version');
+  if (fs.existsSync(versionFile)) {
+    const version = fs.readFileSync(versionFile, 'utf8').trim();
+    if (version === 'v2.0') {
+      // Verify v2 structure integrity
+      if (fs.existsSync(path.join(MEMORY_DIR, 'core', 'activeContext.md'))) {
+        return 'v2';
+      } else {
+        console.error('⚠️  Corrupted v2.0 structure detected - reinitializing');
+        return 'v2-corrupted';
+      }
+    }
+  }
+
   // Check for v2.0 structure (core/ directory)
   if (fs.existsSync(path.join(MEMORY_DIR, 'core'))) {
+    // Core exists but no version file - mark as v2 and add version file
+    fs.writeFileSync(versionFile, 'v2.0\n');
     return 'v2';
   }
 
@@ -46,6 +63,11 @@ function main() {
     // v1.x structure → auto-migrate
     console.error('🔄 Migrating MightyArchitect to v2.0 structure...');
     migrateToV2();
+    loadV2Structure();
+  } else if (version === 'v2-corrupted') {
+    // Corrupted v2 structure → reinitialize
+    console.error('🔧 Repairing corrupted v2.0 structure...');
+    repairV2Structure();
     loadV2Structure();
   } else {
     // New project → initialize v2.0
@@ -174,6 +196,10 @@ function initializeV2Structure() {
     // Note: architect.md not copied in fallback (agent file, not memory)
   }
 
+  // Create version file
+  const versionFile = path.join(MEMORY_DIR, '.version');
+  fs.writeFileSync(versionFile, 'v2.0\n');
+
   console.error('✓ MightyArchitect v2.0 memory structure initialized');
 
   // Load the newly created structure
@@ -253,6 +279,11 @@ function migrateToV2() {
     console.error('✓ Installed new architect.md (v2.0 agent)');
   }
 
+  // 8. Create version file to mark successful migration
+  const versionFile = path.join(MEMORY_DIR, '.version');
+  fs.writeFileSync(versionFile, 'v2.0\n');
+  console.error('✓ Created version file');
+
   console.error('');
   console.error('✅ Migration to v2.0 complete!');
   console.error('');
@@ -266,4 +297,56 @@ function migrateToV2() {
   console.error('');
   console.error('💡 Run `/architect-review` to complete missing files');
   console.error('');
+}
+
+function repairV2Structure() {
+  // Repair corrupted v2.0 structure
+  const coreDir = path.join(MEMORY_DIR, 'core');
+  const templateDir = path.join(HOME, '.claude', 'plugins', 'mighty-architect', 'templates');
+
+  // Ensure core directory exists
+  if (!fs.existsSync(coreDir)) {
+    fs.mkdirSync(coreDir, { recursive: true });
+  }
+
+  // Check and repair missing core files
+  const coreFiles = [
+    'activeContext.md',
+    'projectbrief.md',
+    'productContext.md',
+    'systemPatterns.md',
+    'techContext.md',
+    'progress.md'
+  ];
+
+  for (const file of coreFiles) {
+    const filePath = path.join(coreDir, file);
+    if (!fs.existsSync(filePath)) {
+      console.error(`  Repairing missing ${file}...`);
+      const templatePath = path.join(templateDir, file);
+      if (fs.existsSync(templatePath)) {
+        fs.copyFileSync(templatePath, filePath);
+      } else {
+        // Create minimal file
+        fs.writeFileSync(filePath, `# ${file.replace('.md', '')}\n\n[Repaired - complete via /architect-review]\n`);
+      }
+    }
+  }
+
+  // Ensure memory-index.md exists
+  const memoryIndexPath = path.join(MEMORY_DIR, 'memory-index.md');
+  if (!fs.existsSync(memoryIndexPath)) {
+    const templatePath = path.join(templateDir, 'memory-index.md');
+    if (fs.existsSync(templatePath)) {
+      fs.copyFileSync(templatePath, memoryIndexPath);
+    } else {
+      fs.writeFileSync(memoryIndexPath, '# Memory Index\n\n[Repaired - run /architect-review]\n');
+    }
+  }
+
+  // Update version file
+  const versionFile = path.join(MEMORY_DIR, '.version');
+  fs.writeFileSync(versionFile, 'v2.0\n');
+
+  console.error('✓ v2.0 structure repaired');
 }

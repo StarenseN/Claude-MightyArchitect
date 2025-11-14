@@ -21,84 +21,50 @@ process.stdin.on('end', () => {
   }
 });
 
+function detectStructureVersion() {
+  // Check for v2.0 structure (core/ directory)
+  if (fs.existsSync(path.join(MEMORY_DIR, 'core'))) {
+    return 'v2';
+  }
+
+  // Check for v1.x structure (activeContext.md at root)
+  if (fs.existsSync(path.join(MEMORY_DIR, 'activeContext.md'))) {
+    return 'v1';
+  }
+
+  // New project (no structure)
+  return 'new';
+}
+
 function main() {
-  // Check if memory structure exists
-  if (!fs.existsSync(MEMORY_DIR)) {
-    // Check user preference (default to true)
-    let autoInit = true;
+  const version = detectStructureVersion();
 
-    if (fs.existsSync(SETTINGS_FILE)) {
-      try {
-        const settings = JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf8'));
-        autoInit = settings.mightyArchitect?.autoInit ?? true;
-      } catch (error) {
-        // Settings file invalid, use default
-        autoInit = true;
-      }
-    }
-
-    if (autoInit) {
-      // Create directory structure
-      fs.mkdirSync(path.join(MEMORY_DIR, 'tasks'), { recursive: true });
-      fs.mkdirSync(path.join(MEMORY_DIR, 'knowledge'), { recursive: true });
-
-      // Copy templates
-      const templateDir = path.join(HOME, '.claude', 'plugins', 'mighty-architect', 'templates');
-
-      if (fs.existsSync(templateDir)) {
-        // Copy working memory templates
-        fs.copyFileSync(
-          path.join(templateDir, 'activeContext.md'),
-          path.join(MEMORY_DIR, 'activeContext.md')
-        );
-        fs.copyFileSync(
-          path.join(templateDir, 'architect.md'),
-          path.join(MEMORY_DIR, 'architect.md')
-        );
-
-        // Copy knowledge base templates
-        const knowledgeTemplates = ['patterns.md', 'decisions.md', 'evolution.md'];
-        for (const template of knowledgeTemplates) {
-          const templatePath = path.join(templateDir, template);
-          if (fs.existsSync(templatePath)) {
-            fs.copyFileSync(
-              templatePath,
-              path.join(MEMORY_DIR, 'knowledge', template)
-            );
-          }
-        }
-      } else {
-        // Fallback: create minimal files
-        fs.writeFileSync(path.join(MEMORY_DIR, 'activeContext.md'), '# Active Context\n');
-        fs.writeFileSync(path.join(MEMORY_DIR, 'architect.md'), '# Architect\n');
-        fs.writeFileSync(path.join(MEMORY_DIR, 'knowledge', 'patterns.md'), '# Architectural Patterns\n');
-        fs.writeFileSync(path.join(MEMORY_DIR, 'knowledge', 'decisions.md'), '# Architectural Decisions\n');
-        fs.writeFileSync(path.join(MEMORY_DIR, 'knowledge', 'evolution.md'), '# Project Evolution\n');
-      }
-
-      console.error('✓ MightyArchitect memory structure initialized');
-    }
+  if (version === 'v2') {
+    // v2.0 structure exists
+    loadV2Structure();
+  } else if (version === 'v1') {
+    // v1.x structure → auto-migrate
+    console.error('🔄 Migrating MightyArchitect to v2.0 structure...');
+    migrateToV2();
+    loadV2Structure();
+  } else {
+    // New project → initialize v2.0
+    initializeV2Structure();
   }
+}
 
-  // Load context if structure exists
-  if (fs.existsSync(MEMORY_DIR)) {
-    console.log('---');
-    console.log('# MightyArchitect Memory Context');
-    console.log('');
-    console.log(fs.readFileSync(path.join(MEMORY_DIR, 'activeContext.md'), 'utf8'));
-    console.log('');
-    console.log('---');
-    console.log('');
-    console.log(fs.readFileSync(path.join(MEMORY_DIR, 'architect.md'), 'utf8'));
+// Stub functions to be implemented
+function loadV2Structure() {
+  // To be implemented in Task 13
+  console.error('loadV2Structure not yet implemented');
+}
 
-    // Load incomplete task if exists
-    const currentTask = path.join(MEMORY_DIR, 'tasks', 'current.md');
-    if (fs.existsSync(currentTask)) {
-      console.log('');
-      console.log('---');
-      console.log('## Resuming Task:');
-      console.log('');
-      console.log(fs.readFileSync(currentTask, 'utf8'));
-    }
-  }
+function initializeV2Structure() {
+  // To be implemented in Task 14
+  console.error('initializeV2Structure not yet implemented');
+}
+
+function migrateToV2() {
+  // To be implemented in Task 15
+  console.error('migrateToV2 not yet implemented');
 }

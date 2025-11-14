@@ -164,6 +164,13 @@ function launchArchitectAgentModeA(commitHash, commitMsg, filesChanged, filesCha
     const patternsPath = path.join(coreDir, 'systemPatterns.md');
 
     if (fs.existsSync(patternsPath)) {
+      // Check if this commit was already processed
+      const existingContent = fs.readFileSync(patternsPath, 'utf8');
+      if (existingContent.includes(`**Commit:** ${commitHash}`)) {
+        console.log('  ℹ️  Pattern already recorded for this commit');
+        return;
+      }
+
       const date = new Date().toISOString().split('T')[0];
       const entry = `
 ## ${date} - ${analysis.pattern}

@@ -181,6 +181,89 @@ function initializeV2Structure() {
 }
 
 function migrateToV2() {
-  // To be implemented in Task 15
-  console.error('migrateToV2 not yet implemented');
+  // Backup old structure first
+  const backupDir = path.join(MEMORY_DIR + '.backup-v1');
+  if (!fs.existsSync(backupDir)) {
+    fs.cpSync(MEMORY_DIR, backupDir, { recursive: true });
+    console.error(`✓ Backup created: ${backupDir}`);
+  }
+
+  // 1. Create new directories
+  fs.mkdirSync(path.join(MEMORY_DIR, 'core'), { recursive: true });
+  fs.mkdirSync(path.join(MEMORY_DIR, 'plans'), { recursive: true });
+  fs.mkdirSync(path.join(MEMORY_DIR, 'errors'), { recursive: true });
+  // knowledge/ and tasks/ already exist in v1.x
+
+  // 2. Move activeContext.md → core/activeContext.md
+  const oldActiveContext = path.join(MEMORY_DIR, 'activeContext.md');
+  const newActiveContext = path.join(MEMORY_DIR, 'core', 'activeContext.md');
+  if (fs.existsSync(oldActiveContext)) {
+    fs.renameSync(oldActiveContext, newActiveContext);
+    console.error('✓ Moved activeContext.md → core/');
+  }
+
+  // 3. Rename knowledge/patterns.md → core/systemPatterns.md
+  const oldPatterns = path.join(MEMORY_DIR, 'knowledge', 'patterns.md');
+  const newPatterns = path.join(MEMORY_DIR, 'core', 'systemPatterns.md');
+  if (fs.existsSync(oldPatterns)) {
+    fs.renameSync(oldPatterns, newPatterns);
+    console.error('✓ Renamed patterns.md → systemPatterns.md');
+  }
+
+  // 4. Create missing core/ files from templates
+  const templateDir = path.join(HOME, '.claude', 'plugins', 'mighty-architect', 'templates');
+  const missingCoreFiles = ['projectbrief.md', 'productContext.md', 'techContext.md', 'progress.md'];
+
+  for (const file of missingCoreFiles) {
+    const dest = path.join(MEMORY_DIR, 'core', file);
+    if (!fs.existsSync(dest)) {
+      const src = path.join(templateDir, file);
+      if (fs.existsSync(src)) {
+        fs.copyFileSync(src, dest);
+      } else {
+        // Minimal fallback
+        fs.writeFileSync(dest, `# ${file.replace('.md', '')}\n\n[Complete via /architect-review]\n`);
+      }
+    }
+  }
+  console.error('✓ Created missing core/ files');
+
+  // 5. Create memory-index.md
+  const indexSrc = path.join(templateDir, 'memory-index.md');
+  const indexDest = path.join(MEMORY_DIR, 'memory-index.md');
+  if (fs.existsSync(indexSrc)) {
+    fs.copyFileSync(indexSrc, indexDest);
+  } else {
+    fs.writeFileSync(indexDest, '# Memory Index\n\nRun `/architect-review` to populate.\n');
+  }
+  console.error('✓ Created memory-index.md');
+
+  // 6. Remove old architect.md (v1.x with scoring), will be replaced by agent version
+  const oldArchitect = path.join(MEMORY_DIR, 'architect.md');
+  if (fs.existsSync(oldArchitect)) {
+    fs.unlinkSync(oldArchitect);
+    console.error('✓ Removed old architect.md (v1.x)');
+  }
+
+  // 7. Copy new architect.md from plugin (agent instructions)
+  const architectSrc = path.join(HOME, '.claude', 'plugins', 'mighty-architect', 'agents', 'architect.md');
+  const architectDest = path.join(MEMORY_DIR, 'architect.md');
+  if (fs.existsSync(architectSrc)) {
+    fs.copyFileSync(architectSrc, architectDest);
+    console.error('✓ Installed new architect.md (v2.0 agent)');
+  }
+
+  console.error('');
+  console.error('✅ Migration to v2.0 complete!');
+  console.error('');
+  console.error('📁 New structure:');
+  console.error('  - core/ (6 files)');
+  console.error('  - knowledge/ (decisions.md, evolution.md)');
+  console.error('  - tasks/ (preserved)');
+  console.error('  - plans/ (new)');
+  console.error('  - errors/ (new)');
+  console.error('  - memory-index.md (new)');
+  console.error('');
+  console.error('💡 Run `/architect-review` to complete missing files');
+  console.error('');
 }

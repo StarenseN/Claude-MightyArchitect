@@ -230,12 +230,12 @@ MightyArchitect creates a `.claude/memory/` directory in your project:
 │   ├── projectbrief.md               # 📁 Project overview
 │   ├── productContext.md             # 📁 Problem/solution context
 │   ├── techContext.md                # 📁 Technology decisions
-│   └── progress.md                   # 📁 Roadmap & features
+│   ├── progress.md                   # 📁 Roadmap & features
+│   └── memory-index.md               # 👁️ Health status (~300 tokens)
 │
-├── 🏗️ architect.md                   # 📁 Agent instructions (not loaded)
-│                                     # Architect Agent Modes A & C
+├── 🏗️ architect.md                   # 📋 Architect agent reference (local copy)
 │
-├── 📂 tasks/                         # 📁 Task logs (on-demand)
+├── 📂 tasks/                         # 📁 Task logs (created by Task Manager agent)
 │   ├── 20251112-120000-auth.md      # Timestamped task logs
 │   └── 20251111-143000-api.md       # With 23-point scoring
 │
@@ -244,11 +244,12 @@ MightyArchitect creates a `.claude/memory/` directory in your project:
 │   └── evolution.md                  # Project history
 │
 ├── 📂 plans/                         # 📁 Implementation plans
-├── 📂 errors/                        # 📁 Error patterns
-└── 📄 memory-index.md                # 👁️ Health status (~300 tokens)
+└── 📂 errors/                        # 📁 Error patterns
 ```
 
 **Legend**: 👁️ = Auto-loaded (800-1000 tokens total) | 📁 = On-demand | 🧠 = Accumulated wisdom
+
+> **Note on Agents**: The actual agent definitions (architect.md, task-manager.md) are installed globally in `~/.claude/plugins/mighty-architect/agents/`. The `architect.md` file in your project memory is a local reference copy. Agents are invoked via Claude's Task tool and operate on your project's memory.
 
 ### Example: activeContext.md
 
@@ -316,6 +317,63 @@ Understanding what MightyArchitect does automatically vs when you need to take a
 | **Memory Updates** | 📝 Manual | When you want | Edit markdown files |
 
 **Key Point**: The hook **automatically analyzes** significant commits (feat/refactor/perf with 3+ files), detecting patterns and updating your knowledge base. For **detailed 23-point evaluation**, run `/architect-review` manually.
+
+---
+
+## 🤝 Agent Collaboration
+
+MightyArchitect uses two specialized agents that work together:
+
+### Architect Agent (Macro-Level)
+
+**Location**: `~/.claude/plugins/mighty-architect/agents/architect.md`
+
+**Responsibilities**:
+- 🏗️ Architectural pattern detection and documentation
+- 📊 System health monitoring
+- 🔍 Cross-file coherence analysis
+- 📝 Strategic decision documentation
+
+**Modes**:
+- **Mode A** (Automatic, 60s): Quick observation after commits, basic pattern detection
+- **Mode C** (Manual, 5-10min): Comprehensive analysis via `/architect-review`
+
+**Output**: Updates `systemPatterns.md`, generates detailed reports in `Docs/`
+
+**When Invoked**:
+- Automatically: After architectural commits (feat/refactor/perf with 3+ files)
+- Manually: `/architect-review` command
+
+### Task Manager Agent (Micro-Level)
+
+**Location**: `~/.claude/plugins/mighty-architect/agents/task-manager.md`
+
+**Responsibilities**:
+- ✅ Todo completion tracking
+- 📊 23-point quality scoring
+- 📝 Task log generation
+- 🎯 Semantic task grouping
+
+**Scoring System**: Brutal honesty 23-point system (rewards - penalties)
+
+**Output**: Creates task logs in `.claude/memory/tasks/` with performance evaluation
+
+**When Invoked**:
+- Automatically: When you complete todos (via TodoWrite hook)
+- Creates 1 log per standalone todo OR 1 log per thematic batch
+
+### Agent Separation
+
+| Aspect | Architect Agent | Task Manager Agent |
+|--------|----------------|-------------------|
+| **Focus** | Macro (architecture) | Micro (tasks) |
+| **Scope** | System-wide patterns | Individual work items |
+| **Trigger** | Git commits | Todo completion |
+| **Analysis Time** | 60s (Mode A) or 5-10min (Mode C) | < 5s |
+| **Scoring** | No scoring (just analysis) | 23-point scoring |
+| **Output** | systemPatterns.md, reports | Task logs |
+
+**No Overlap**: Architect analyzes *what* patterns exist, Task Manager scores *how well* you implemented them.
 
 ---
 
@@ -865,6 +923,34 @@ Stored in `~/.claude/settings.json`:
   }
 }
 ```
+
+### Plugin Structure
+
+MightyArchitect is installed globally in your home directory:
+
+```
+~/.claude/
+├── plugins/mighty-architect/
+│   ├── agents/
+│   │   ├── architect.md        # Architect Agent (Modes A & C)
+│   │   └── task-manager.md     # Task Manager Agent (23-point scoring)
+│   ├── hooks/
+│   │   ├── session-start.js    # Loads memory on startup
+│   │   ├── git-commit.js       # Triggers Mode A analysis
+│   │   ├── stop.js             # Reminds to update memory
+│   │   └── pre-tool-use-todowrite.js  # Task log creation
+│   ├── templates/              # Memory file templates
+│   └── skills/                 # Superpowers integration
+│
+├── commands/                   # Slash commands
+│   ├── architect-review.md     # /architect-review
+│   ├── power-up.md            # /power-up
+│   └── ...                    # 11 commands total
+│
+└── settings.json              # Hook registrations
+```
+
+**Important**: Agents are invoked globally via Claude's Task tool, but they operate on your **per-project** memory in `.claude/memory/`.
 
 ### Customization
 

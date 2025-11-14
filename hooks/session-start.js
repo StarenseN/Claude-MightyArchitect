@@ -53,6 +53,58 @@ function detectStructureVersion() {
   return 'new';
 }
 
+function isLegacyProject() {
+  // Detect if this is an existing project (not a fresh init)
+
+  // 1. Check for .git directory
+  if (!fs.existsSync('.git')) {
+    return false; // Not a git project
+  }
+
+  // 2. Check git history depth
+  try {
+    const { execSync } = require('child_process');
+    const commitCount = execSync('git rev-list --count HEAD 2>/dev/null', { encoding: 'utf8' }).trim();
+    if (parseInt(commitCount) < 3) {
+      return false; // Too few commits
+    }
+  } catch (error) {
+    return false; // Git command failed
+  }
+
+  // 3. Check for code files (rough heuristic)
+  const codeExtensions = ['.js', '.ts', '.py', '.go', '.java', '.rb', '.php', '.rs', '.c', '.cpp', '.cs'];
+  let codeFileCount = 0;
+
+  function countCodeFiles(dir, depth = 0) {
+    if (depth > 3) return; // Limit recursion depth
+    if (dir.includes('node_modules') || dir.includes('.git')) return;
+
+    try {
+      const files = fs.readdirSync(dir);
+      for (const file of files) {
+        const fullPath = path.join(dir, file);
+        try {
+          const stat = fs.statSync(fullPath);
+          if (stat.isDirectory()) {
+            countCodeFiles(fullPath, depth + 1);
+          } else if (codeExtensions.some(ext => file.endsWith(ext))) {
+            codeFileCount++;
+          }
+        } catch (e) {
+          // Skip unreadable files
+        }
+      }
+    } catch (e) {
+      // Skip unreadable directories
+    }
+  }
+
+  countCodeFiles('.');
+
+  return codeFileCount >= 5; // At least 5 code files
+}
+
 function main() {
   const version = detectStructureVersion();
 
@@ -70,8 +122,12 @@ function main() {
     repairV2Structure();
     loadV2Structure();
   } else {
-    // New project → initialize v2.0
-    initializeV2Structure();
+    // New project → check if legacy or fresh
+    if (isLegacyProject()) {
+      suggestBootstrap();
+    } else {
+      initializeV2Structure();
+    }
   }
 }
 
@@ -296,6 +352,40 @@ function migrateToV2() {
   console.error('  - memory-index.md (new)');
   console.error('');
   console.error('💡 Run `/architect-review` to complete missing files');
+  console.error('');
+}
+
+function suggestBootstrap() {
+  // Suggest /bootstrap for legacy projects
+  console.error('');
+  console.error('🏗️  LEGACY PROJECT DETECTED');
+  console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  console.error('');
+  console.error('This project has existing code and git history.');
+  console.error('');
+  console.error('💡 RECOMMENDATION: Use /bootstrap for comprehensive onboarding');
+  console.error('');
+  console.error('What /bootstrap does (10-30 minutes):');
+  console.error('  • Phase 0: Analyzes complete git history');
+  console.error('  • Phase 1: Explores entire codebase');
+  console.error('  • Phase 2: Captures tribal knowledge (interactive Q&A)');
+  console.error('  • Phase 3: Initializes complete memory system');
+  console.error('');
+  console.error('Result: ~2000-4000 lines of documentation capturing your');
+  console.error('        project\'s architecture, patterns, and decisions.');
+  console.error('');
+  console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  console.error('');
+  console.error('To bootstrap now: Type /bootstrap');
+  console.error('To skip and use minimal memory: Continue working normally');
+  console.error('');
+
+  // Initialize minimal structure anyway (so user isn't blocked)
+  initializeV2Structure();
+
+  console.error('');
+  console.error('ℹ️  Minimal memory structure initialized.');
+  console.error('   Run /bootstrap anytime to capture full project context.');
   console.error('');
 }
 

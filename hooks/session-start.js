@@ -53,10 +53,51 @@ function main() {
   }
 }
 
-// Stub functions to be implemented
 function loadV2Structure() {
-  // To be implemented in Task 13
-  console.error('loadV2Structure not yet implemented');
+  // Load selective core/ files (~800-1000 tokens)
+  const activeContextPath = path.join(MEMORY_DIR, 'core', 'activeContext.md');
+  const systemPatternsPath = path.join(MEMORY_DIR, 'core', 'systemPatterns.md');
+  const memoryIndexPath = path.join(MEMORY_DIR, 'memory-index.md');
+
+  console.log('---');
+  console.log('# MightyArchitect Memory Context (v2.0)');
+  console.log('');
+
+  // Load activeContext.md (current focus)
+  if (fs.existsSync(activeContextPath)) {
+    console.log('## Active Context');
+    console.log('');
+    console.log(fs.readFileSync(activeContextPath, 'utf8'));
+    console.log('');
+  }
+
+  // Load systemPatterns.md (architecture)
+  if (fs.existsSync(systemPatternsPath)) {
+    console.log('---');
+    console.log('## System Patterns');
+    console.log('');
+    console.log(fs.readFileSync(systemPatternsPath, 'utf8'));
+    console.log('');
+  }
+
+  // Load memory-index.md (health status)
+  if (fs.existsSync(memoryIndexPath)) {
+    console.log('---');
+    console.log('## Memory Index');
+    console.log('');
+    console.log(fs.readFileSync(memoryIndexPath, 'utf8'));
+    console.log('');
+  }
+
+  console.log('---');
+
+  // Note about other files available on-demand
+  console.log('');
+  console.log('📁 **Additional context available via Read tool:**');
+  console.log('- core/projectbrief.md, core/productContext.md, core/techContext.md, core/progress.md');
+  console.log('- knowledge/decisions.md, knowledge/evolution.md');
+  console.log('- tasks/ (recent task logs)');
+  console.log('');
 }
 
 function initializeV2Structure() {

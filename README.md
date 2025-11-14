@@ -595,72 +595,72 @@ Blockers: None
 - Average quality score: 20.3/23 (Sufficient)
 ```
 
-### `/forensic`
+### `/bootstrap` (Recommended for Legacy Projects)
 
-Analyze git history to understand project evolution and architectural decisions:
-
-```
-/forensic
-```
-
-**What it does**:
-- Constructs timeline from architectural commits (feat/refactor/perf)
-- Identifies file hotspots (complexity centers needing refactoring)
-- Tracks when patterns first emerged
-- Finds large commits indicating architectural shifts
-- Maps author knowledge distribution
-- Updates knowledge base with evolution insights
-
-**Usage modes**:
-
-```bash
-# Quick mode (last 3 months)
-/forensic
-
-# Deep mode (full history)
-/forensic --deep
-
-# Focus on specific area
-/forensic --path src/api
-
-# Custom timeframe
-/forensic --since "6 months ago"
-
-# Specific author's work
-/forensic --author "john@example.com"
-```
-
-**Output**: Creates `.claude/memory/knowledge/evolution.md` with timeline, hotspots, pattern emergence dates, and inferred architectural decisions. Asks you to fill in "why" after analyzing "what" from commit history.
-
-**Use when**:
-- Bootstrapping MightyArchitect on legacy projects
-- Understanding why the codebase evolved this way
-- Preparing for major refactors (know the history first)
-- Identifying tribal knowledge owners
-- Finding technical debt accumulation points
-
-**Perfect for**: Taking over inherited codebases, onboarding to existing projects, or conducting architectural archaeology.
-
-### `/bootstrap`
-
-Interactive workflow to bootstrap MightyArchitect on existing legacy projects:
+Comprehensive 4-phase workflow to onboard MightyArchitect on existing undocumented projects:
 
 ```bash
 /bootstrap
 ```
 
 **What it does**:
-- **Phase 1**: Automated codebase analysis (explores structure, identifies 5-7 patterns)
-- **Phase 2**: Interactive Q&A (asks you to explain "why" behind decisions)
-- **Phase 3**: Initializes memory system with captured knowledge
+- **Phase 0 (Automatic)**: Git forensic analysis - analyzes commit history, identifies file hotspots, maps architectural evolution
+- **Phase 1 (Automatic)**: Codebase analysis - explores structure, identifies 5-7 patterns, cross-references with forensic findings
+- **Phase 2 (Interactive)**: Q&A with you - asks "why" behind decisions, captures tribal knowledge
+- **Phase 3 (Automatic)**: Memory initialization - sets up complete `.claude/memory/` structure with all context
+
+**Usage modes**:
+
+```bash
+# Quick bootstrap (last 3 months history)
+/bootstrap
+
+# Deep bootstrap (full git history)
+/bootstrap --deep
+
+# Focus on specific directory
+/bootstrap --path src/api --deep
+
+# Skip forensic (code analysis only)
+/bootstrap --no-forensic
+```
+
+**Output**: Complete memory system (~2000-4000 lines of documentation):
+- `core/` - Project brief, context, patterns, progress
+- `knowledge/evolution.md` - Full project timeline from git history
+- `knowledge/patterns.md` - Pattern emergence and usage
+- `knowledge/decisions.md` - Architectural decisions with rationale
+
+**Duration**: 10-30 minutes (mostly automatic, ~5-15 min of your Q&A time)
 
 **Use when**:
 - First time using MightyArchitect on existing project
 - Project has no documentation
 - You want to capture tribal knowledge before it's lost
 - Onboarding new team members
+- Taking over inherited codebases
 
-**Combines with**: `/forensic` (analyzes git history) + `/bootstrap` (analyzes code structure) = comprehensive project understanding.
+**Perfect for**: Complete project onboarding with git history + code analysis + tribal knowledge capture.
+
+### `/forensic` (Git History Only)
+
+Standalone git forensic analysis (consider using `/bootstrap` instead for complete onboarding):
+
+```bash
+/forensic
+```
+
+> **💡 Tip**: `/bootstrap` automatically includes forensic analysis plus code analysis and Q&A. Use `/forensic` only if you need git history analysis without full project setup.
+
+**What it does**:
+- Analyzes commit timeline (feat/refactor/perf)
+- Identifies file hotspots
+- Tracks pattern emergence
+- Maps author knowledge distribution
+
+**Output**: `.claude/memory/knowledge/evolution.md` only
+
+**Duration**: 2-5 minutes
 
 ### `/register-todowrite-hook` ⭐ NEW
 

@@ -132,6 +132,9 @@ function main() {
 }
 
 function loadV2Structure() {
+  // Ensure git hooks are installed (repair if missing)
+  installGitHooks();
+
   // Load selective core/ files (~800-1000 tokens)
   const activeContextPath = path.join(MEMORY_DIR, 'core', 'activeContext.md');
   const systemPatternsPath = path.join(MEMORY_DIR, 'core', 'systemPatterns.md');
@@ -258,6 +261,9 @@ function initializeV2Structure() {
 
   console.error('✓ MightyArchitect v2.0 memory structure initialized');
 
+  // Install git hooks automatically
+  installGitHooks();
+
   // Load the newly created structure
   loadV2Structure();
 }
@@ -340,6 +346,9 @@ function migrateToV2() {
   fs.writeFileSync(versionFile, 'v2.0\n');
   console.error('✓ Created version file');
 
+  // 9. Install git hooks automatically
+  installGitHooks();
+
   console.error('');
   console.error('✅ Migration to v2.0 complete!');
   console.error('');
@@ -353,6 +362,62 @@ function migrateToV2() {
   console.error('');
   console.error('💡 Run `/architect-review` to complete missing files');
   console.error('');
+}
+
+function installGitHooks() {
+  // Install git hooks automatically if this is a git repository
+
+  try {
+    // Find the real .git directory (handles worktrees)
+    let gitDir = '.git';
+
+    if (fs.existsSync('.git')) {
+      const gitContent = fs.readFileSync('.git', 'utf8');
+      if (gitContent.startsWith('gitdir:')) {
+        // Worktree: .git is a file pointing to the real git directory
+        gitDir = gitContent.replace('gitdir:', '').trim();
+      }
+    }
+
+    const hooksDir = path.join(gitDir, 'hooks');
+
+    if (!fs.existsSync(hooksDir)) {
+      // Not a git repository, skip silently
+      return;
+    }
+
+    // Check if post-commit hook already exists and is ours
+    const postCommitPath = path.join(hooksDir, 'post-commit');
+    const gitCommitSource = path.join(HOME, '.claude', 'plugins', 'mighty-architect', 'hooks', 'git-commit.js');
+
+    if (!fs.existsSync(gitCommitSource)) {
+      // MightyArchitect not properly installed
+      return;
+    }
+
+    // Check if hook already installed
+    if (fs.existsSync(postCommitPath)) {
+      const existingContent = fs.readFileSync(postCommitPath, 'utf8');
+      if (existingContent.includes('MightyArchitect')) {
+        // Already installed
+        return;
+      }
+    }
+
+    // Install the hook
+    fs.copyFileSync(gitCommitSource, postCommitPath);
+
+    // Make it executable (Unix/macOS/Linux)
+    if (process.platform !== 'win32') {
+      fs.chmodSync(postCommitPath, 0o755);
+    }
+
+    console.error('✓ Git hooks installed (post-commit → MightyArchitect Mode A)');
+
+  } catch (error) {
+    // Silent failure - don't break initialization
+    // Git hooks are nice-to-have, not critical
+  }
 }
 
 function suggestBootstrap() {

@@ -608,14 +608,16 @@ Blockers: None
 - **Phase 1 (3-7 min)**: Codebase analysis - explores **entire codebase**, identifies 5-7 patterns, cross-references with forensic findings
 - **Phase 2 (5-15 min)**: Interactive Q&A - asks "why" behind decisions, captures tribal knowledge not visible in code
 - **Phase 3 (1-2 min)**: Memory initialization - sets up complete `.claude/memory/` structure with all context
+- **Phase 4 (3-5 min)**: Architect review - automatically runs `/architect-review` to validate documentation and generate analysis report
 
-**Output**: Complete memory system (~2000-4000 lines of documentation):
+**Output**: Complete memory system + architectural analysis report:
 - `core/` - Project brief, context, patterns, progress (~800 tokens)
 - `knowledge/evolution.md` - Full project timeline from git history
 - `knowledge/patterns.md` - Pattern emergence and usage
 - `knowledge/decisions.md` - Architectural decisions with rationale
+- `Docs/YYYYMMDD-HHMM-bootstrap-architect-review.md` - Complete analysis report (health score, patterns, technical debt)
 
-**Duration**: 10-30 minutes (mostly automatic, ~5-15 min of your Q&A time)
+**Duration**: 13-35 minutes (includes automatic architect review, ~5-15 min of your Q&A time)
 
 **Use when**:
 - First time using MightyArchitect on existing project (>3 months old)

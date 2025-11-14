@@ -54,6 +54,17 @@ I'll set up your complete memory system:
 
 **Output**: Complete `.claude/memory/` structure
 
+### Phase 4: Architect Review (3-5 min) - AUTOMATIC
+
+After bootstrap completes, I'll automatically run `/architect-review` (Mode C) to:
+- Validate all captured documentation for coherence
+- Generate comprehensive analysis report
+- Score project health (23-point system)
+- Identify architectural strengths and technical debt
+- Create actionable improvement roadmap
+
+**Output**: Complete architectural analysis report in `Docs/`
+
 ---
 
 ## Ready to Start?
@@ -70,13 +81,13 @@ Just tell me about your project:
 - Most complex areas?
 - Team size?
 
-Then I'll run the complete analysis (10-30 minutes total).
+Then I'll run the complete analysis (13-35 minutes total, including automatic architect review).
 
 ---
 
 ## Example Output
 
-After completion, you'll have **~2000-4000 lines of documentation**:
+After completion, you'll have **~2000-4000 lines of documentation** + **architectural analysis report**:
 
 ```
 .claude/memory/
@@ -94,6 +105,11 @@ After completion, you'll have **~2000-4000 lines of documentation**:
     ├── patterns.md            ✅ Pattern history
     └── decisions.md           ✅ Decision rationale
 
+Docs/
+└── YYYYMMDD-HHMM-bootstrap-architect-review.md  ✅ Complete analysis report
+                                                     (Health score, patterns,
+                                                      technical debt, roadmap)
+
 Token usage when loaded: ~1500-2500 tokens
 ```
 
@@ -103,9 +119,10 @@ Token usage when loaded: ~1500-2500 tokens
 
 Going forward:
 - ✅ Memory auto-loads on session start
-- ✅ Patterns auto-detected on commits
-- ✅ Run `/architect-review` for detailed analysis
+- ✅ Patterns auto-detected on commits (Mode A automatic)
+- ✅ Architecture validated with baseline report
 - ✅ Task logs auto-created when completing todos
+- ✅ Run `/architect-review` anytime for updated analysis
 
 **Bootstrap is one-time only** - from then on, the system maintains itself automatically.
 

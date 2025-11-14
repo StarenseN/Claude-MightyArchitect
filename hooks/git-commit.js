@@ -36,10 +36,8 @@ function main(data) {
 
   const commitMsg = match[1];
 
-  // Filter: only architectural commits
-  if (!/^(feat|refactor|perf):/.test(commitMsg)) {
-    return;
-  }
+  // Trigger on any commit with 3+ files changed
+  // All commits are architecturally relevant, no type filtering
 
   // Count files changed (if in git repo)
   try {

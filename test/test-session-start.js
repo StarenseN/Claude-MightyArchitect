@@ -42,6 +42,19 @@ if (fs.existsSync(sourceTemplates)) {
   });
 }
 
+// Copy agents to temp HOME for v2.0
+const sourceAgents = path.resolve('agents');
+const destAgents = path.join(tempHome, '.claude', 'plugins', 'mighty-architect', 'agents');
+fs.mkdirSync(destAgents, { recursive: true });
+if (fs.existsSync(sourceAgents)) {
+  fs.readdirSync(sourceAgents).forEach(file => {
+    fs.copyFileSync(
+      path.join(sourceAgents, file),
+      path.join(destAgents, file)
+    );
+  });
+}
+
 try {
   // Run hook with temp HOME
   const isWindows = process.platform === 'win32';
@@ -55,12 +68,16 @@ try {
     }
   });
 
-  if (fs.existsSync('.claude/memory') && fs.existsSync('.claude/memory/activeContext.md')) {
-    console.log('✓ Test 1 passed: Structure initialized');
+  // Check for v2.0 structure
+  if (fs.existsSync('.claude/memory') &&
+      fs.existsSync('.claude/memory/core/activeContext.md') &&
+      fs.existsSync('.claude/memory/memory-index.md')) {
+    console.log('✓ Test 1 passed: v2.0 structure initialized');
   } else {
     console.log('✗ Test 1 failed: Structure not created');
     console.log('  .claude/memory exists:', fs.existsSync('.claude/memory'));
-    console.log('  activeContext.md exists:', fs.existsSync('.claude/memory/activeContext.md'));
+    console.log('  core/activeContext.md exists:', fs.existsSync('.claude/memory/core/activeContext.md'));
+    console.log('  memory-index.md exists:', fs.existsSync('.claude/memory/memory-index.md'));
     process.exit(1);
   }
 } catch (error) {

@@ -56,11 +56,12 @@ async function runIntegrationTest() {
     sessionProc.on('close', resolve);
   });
 
-  if (!fs.existsSync('.claude/memory/activeContext.md')) {
-    console.log('✗ SessionStart failed to create memory structure');
+  // Check for v2.0 structure
+  if (!fs.existsSync('.claude/memory/core/activeContext.md')) {
+    console.log('✗ SessionStart failed to create v2.0 memory structure');
     process.exit(1);
   }
-  console.log('✓ SessionStart hook working');
+  console.log('✓ SessionStart hook working (v2.0 structure)');
 
   // Test git commit hook with 3+ files
   console.log('3. Testing git commit hook...');

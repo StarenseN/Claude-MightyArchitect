@@ -10,7 +10,7 @@ You are being asked to analyze recently completed todos and create intelligent t
    - If user hasn't provided specific todos, ask: "Please provide the completed todos you want analyzed (or say 'all recent' to analyze todos completed in the current session)"
 
 2. **Read current context**
-   - Read `.claude/memory/activeContext.md` to understand current project focus
+   - Read `.claude/memory/core/activeContext.md` to understand current project focus
    - If file doesn't exist, proceed with minimal context
 
 3. **List recent task logs**
@@ -34,7 +34,7 @@ You are being asked to analyze recently completed todos and create intelligent t
 
 ## Error Handling
 
-**If activeContext.md doesn't exist:**
+**If core/activeContext.md doesn't exist:**
 - Proceed with minimal context (as noted in step 2)
 
 **If .claude/memory/tasks/ doesn't exist:**
@@ -60,7 +60,7 @@ You are being asked to analyze recently completed todos and create intelligent t
 
 **User:** "All recent"
 
-**You:** [Reads activeContext.md, lists recent task logs, collects recent TodoWrite completions, invokes task-manager agent via Task tool, reports results]
+**You:** [Reads core/activeContext.md, lists recent task logs, collects recent TodoWrite completions, invokes task-manager agent via Task tool, reports results]
 
 ## Notes
 

@@ -49,6 +49,25 @@ cat ~/.claude/settings.json
 
 ## First Session
 
+### Automatic v1→v2 Migration
+
+If you have an existing v1.x MightyArchitect installation, the system will **automatically migrate** on first use:
+
+```
+🔄 Migrating MightyArchitect to v2.0 structure...
+✓ Backup created: .claude/memory.backup-v1
+✓ Moved activeContext.md → core/
+✓ Renamed patterns.md → systemPatterns.md
+✓ Created missing core/ files
+✓ Created memory-index.md
+✓ Installed new architect.md (v2.0 agent)
+✓ Created version file
+
+✅ Migration to v2.0 complete!
+```
+
+Your v1 memory is preserved and enhanced with v2.0 structure.
+
 ### Starting a New Project
 
 1. Open Claude Code in your project directory:
@@ -64,16 +83,25 @@ cat ~/.claude/settings.json
    Would you like to initialize the memory system? (y/n):
    ```
 
-3. Answer `y` to create the memory structure:
+3. Answer `y` to create the v2.0 memory structure:
    ```
    .claude/memory/
-   ├── activeContext.md
-   ├── architect.md
-   ├── tasks/
-   │   └── template.md
-   └── knowledge/
-       ├── patterns.md
-       └── decisions.md
+   ├── .version                    # v2.0
+   ├── core/                       # Core memory files
+   │   ├── activeContext.md        # Current work focus
+   │   ├── systemPatterns.md       # Auto-detected patterns
+   │   ├── projectbrief.md         # Project overview
+   │   ├── productContext.md       # Problem/solution
+   │   ├── techContext.md          # Tech stack
+   │   └── progress.md             # Roadmap
+   ├── architect.md                # Agent instructions
+   ├── tasks/                      # Task logs
+   ├── knowledge/                  # Long-term wisdom
+   │   ├── decisions.md
+   │   └── evolution.md
+   ├── plans/                      # Implementation plans
+   ├── errors/                     # Error patterns
+   └── memory-index.md             # Health status
    ```
 
 4. Start coding with Claude as normal!

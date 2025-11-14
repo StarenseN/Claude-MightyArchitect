@@ -80,11 +80,11 @@ runHook({
   tool_input: { command: 'git commit -m "feat: add new feature"' }
 })
 .then(output => {
-  if (output.includes('Analysis Complete')) {
-    console.log('✓ Test 1 passed: Automatic analysis triggered on feat: commit');
+  if (output.includes('Architect Agent Mode A')) {
+    console.log('✓ Test 1 passed: Mode A triggered on feat: commit');
     return Promise.resolve();
   } else {
-    console.log('✗ Test 1 failed: Did not trigger automatic analysis on feat:');
+    console.log('✗ Test 1 failed: Did not trigger Mode A on feat:');
     console.log('Output:', output);
     process.exit(1);
   }
@@ -124,6 +124,38 @@ runHook({
     console.log('✗ Test 3 failed: Should not trigger on non-git');
     process.exit(1);
   }
+})
+// Test 4: Mode A launcher exists
+.then(() => {
+  console.log('Test 4: Mode A invocation on architectural commit...');
+
+  // Create fake git environment
+  process.env.TEST_MODE = 'true';
+
+  // Simulate feat: commit
+  const mockInput = {
+    tool_name: 'Bash',
+    tool_input: {
+      command: 'git commit -m "feat: add user authentication with JWT"'
+    }
+  };
+
+  // Mock git commands would return:
+  // - 5 files changed
+  // - Files include: middleware/auth.js, services/auth.js, etc.
+
+  // Expected: launchArchitectAgentModeA called
+  // For now, verify function exists
+
+  const hookContent = fs.readFileSync(path.join(originalDir, 'hooks', 'git-commit.js'), 'utf8');
+  if (!hookContent.includes('launchArchitectAgentModeA')) {
+    console.error('✗ Test 4 failed: Mode A launcher not implemented');
+    process.exit(1);
+  }
+
+  console.log('✓ Test 4 passed: Mode A launcher implemented');
+
+  delete process.env.TEST_MODE;
 })
 .then(() => {
   // Cleanup

@@ -8,7 +8,7 @@ const path = require('path');
 
 const MEMORY_DIR = '.claude/memory';
 const TASKS_DIR = path.join(MEMORY_DIR, 'tasks');
-const THRESHOLD = 10; // Suggest scoring every 10 unscored task logs
+const THRESHOLD = 3; // Suggest scoring every 3 unscored task logs
 
 // Read stdin for hook input
 let inputData = '';

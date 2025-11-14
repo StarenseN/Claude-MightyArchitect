@@ -735,7 +735,7 @@ Invoke Task Manager Agent to score all unscored task logs:
 
 **Automatic Trigger**:
 - PostToolUse hook monitors TodoWrite completions
-- **Every 10 unscored task logs**, you'll see: `📊 TASK MANAGER INVOCATION RECOMMENDED`
+- **Every 3 unscored task logs**, you'll see: `📊 TASK MANAGER INVOCATION RECOMMENDED`
 - Claude will suggest running `/score-tasks` automatically
 
 **Example Output**:
@@ -760,7 +760,7 @@ Summary:
 ```
 
 **When to use**:
-- ✅ After completing a batch of tasks (10-20 todos)
+- ✅ After completing a batch of tasks (3-10 todos)
 - ✅ End of coding session
 - ✅ Before running `/architect-review` (for complete analysis)
 - ✅ When you see the automatic notification

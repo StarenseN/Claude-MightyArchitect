@@ -60,36 +60,42 @@ function main(data) {
 
 function analyzeCommit(commitMsg, filesChanged) {
   try {
-    // Get commit hash and details
+    // Get commit details
     const commitHash = execSync('git rev-parse --short HEAD', { encoding: 'utf8', stderr: 'ignore' }).trim();
     const commitStat = execSync('git log -1 --stat', { encoding: 'utf8', stderr: 'ignore' });
     const filesChangedList = execSync('git diff --name-only HEAD~1', { encoding: 'utf8', stderr: 'ignore' }).trim().split('\n').filter(Boolean);
 
-    // Extract pattern from commit message and files
-    const pattern = extractPattern(commitMsg, filesChangedList);
+    // Get git diff for agent
+    const gitDiff = execSync('git diff HEAD~1', { encoding: 'utf8', stderr: 'ignore' });
 
-    // Basic quality scoring (simplified for automation)
-    const score = calculateBasicScore(filesChanged, commitMsg);
+    // Check if corresponding task log exists
+    const tasksDir = path.join(process.cwd(), '.claude', 'memory', 'tasks');
+    let taskLogPath = null;
 
-    // Update knowledge base
-    updateKnowledgeBase(commitHash, commitMsg, filesChanged, pattern, score);
+    if (fs.existsSync(tasksDir)) {
+      // Find most recent task log (heuristic: created in last 10 minutes)
+      const now = Date.now();
+      const recentLogs = fs.readdirSync(tasksDir)
+        .filter(f => f.endsWith('.md'))
+        .map(f => ({
+          name: f,
+          path: path.join(tasksDir, f),
+          mtime: fs.statSync(path.join(tasksDir, f)).mtimeMs
+        }))
+        .filter(f => now - f.mtime < 10 * 60 * 1000) // Within 10 min
+        .sort((a, b) => b.mtime - a.mtime);
 
-    // Display summary
-    console.log('');
-    console.log('🏗️  **MightyArchitect Analysis Complete** (Automatic)');
-    console.log('');
-    console.log(`**Commit**: ${commitHash} - ${commitMsg}`);
-    console.log(`**Files Changed**: ${filesChanged}`);
-    console.log(`**Pattern Detected**: ${pattern}`);
-    console.log(`**Estimated Score**: ${score}/23 (${getScoreTier(score)})`);
-    console.log('');
-    console.log('**Knowledge Base Updated**:');
-    console.log('✓ `.claude/memory/knowledge/patterns.md`');
-    console.log('');
-    console.log('💡 **Tip**: Run `/architect-review` for detailed analysis with full 23-point evaluation');
-    console.log('');
+      if (recentLogs.length > 0) {
+        taskLogPath = recentLogs[0].path;
+      }
+    }
+
+    // Launch Architect Agent Mode A
+    launchArchitectAgentModeA(commitHash, commitMsg, filesChanged, filesChangedList, gitDiff, taskLogPath);
+
   } catch (error) {
-    // Silent failure - don't break the workflow
+    // Silent failure - don't break workflow
+    console.error('⚠️  Architect Agent Mode A failed:', error.message);
   }
 }
 

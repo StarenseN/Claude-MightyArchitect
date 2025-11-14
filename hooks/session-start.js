@@ -101,8 +101,83 @@ function loadV2Structure() {
 }
 
 function initializeV2Structure() {
-  // To be implemented in Task 14
-  console.error('initializeV2Structure not yet implemented');
+  // Create directory structure
+  fs.mkdirSync(path.join(MEMORY_DIR, 'core'), { recursive: true });
+  fs.mkdirSync(path.join(MEMORY_DIR, 'knowledge'), { recursive: true });
+  fs.mkdirSync(path.join(MEMORY_DIR, 'tasks'), { recursive: true });
+  fs.mkdirSync(path.join(MEMORY_DIR, 'plans'), { recursive: true });
+  fs.mkdirSync(path.join(MEMORY_DIR, 'errors'), { recursive: true });
+
+  const templateDir = path.join(HOME, '.claude', 'plugins', 'mighty-architect', 'templates');
+
+  if (fs.existsSync(templateDir)) {
+    // Copy core/ templates
+    const coreTemplates = [
+      'projectbrief.md',
+      'productContext.md',
+      'systemPatterns.md',
+      'techContext.md',
+      'activeContext.md',
+      'progress.md'
+    ];
+
+    for (const template of coreTemplates) {
+      const src = path.join(templateDir, template);
+      const dest = path.join(MEMORY_DIR, 'core', template);
+      if (fs.existsSync(src)) {
+        fs.copyFileSync(src, dest);
+      }
+    }
+
+    // Copy knowledge/ templates
+    const knowledgeTemplates = ['decisions.md', 'evolution.md'];
+    for (const template of knowledgeTemplates) {
+      const src = path.join(templateDir, template);
+      const dest = path.join(MEMORY_DIR, 'knowledge', template);
+      if (fs.existsSync(src)) {
+        fs.copyFileSync(src, dest);
+      }
+    }
+
+    // Copy memory-index.md
+    const indexSrc = path.join(templateDir, 'memory-index.md');
+    const indexDest = path.join(MEMORY_DIR, 'memory-index.md');
+    if (fs.existsSync(indexSrc)) {
+      fs.copyFileSync(indexSrc, indexDest);
+    }
+
+    // Copy architect.md (instructions) - NOT in core/, at root of memory/
+    const architectSrc = path.join(HOME, '.claude', 'plugins', 'mighty-architect', 'agents', 'architect.md');
+    const architectDest = path.join(MEMORY_DIR, 'architect.md');
+    if (fs.existsSync(architectSrc)) {
+      fs.copyFileSync(architectSrc, architectDest);
+    }
+  } else {
+    // Fallback: create minimal files if templates missing
+    console.error('⚠️  Templates not found, creating minimal structure');
+
+    // Minimal core/ files
+    fs.writeFileSync(path.join(MEMORY_DIR, 'core', 'projectbrief.md'), '# Project Brief\n\n[Complete via /architect-review]\n');
+    fs.writeFileSync(path.join(MEMORY_DIR, 'core', 'productContext.md'), '# Product Context\n\n[Complete via /architect-review]\n');
+    fs.writeFileSync(path.join(MEMORY_DIR, 'core', 'systemPatterns.md'), '# Architectural Patterns\n\n<!-- Auto-populated by Architect Agent -->\n');
+    fs.writeFileSync(path.join(MEMORY_DIR, 'core', 'techContext.md'), '# Technical Context\n\n[Complete via /architect-review]\n');
+    fs.writeFileSync(path.join(MEMORY_DIR, 'core', 'activeContext.md'), '# Active Context\n\n## Current Focus\n[What you\'re working on]\n');
+    fs.writeFileSync(path.join(MEMORY_DIR, 'core', 'progress.md'), '# Project Progress\n\n[Updated by Task Manager]\n');
+
+    // Minimal knowledge/ files
+    fs.writeFileSync(path.join(MEMORY_DIR, 'knowledge', 'decisions.md'), '# Architectural Decisions\n\n<!-- Updated by Architect Agent Mode C -->\n');
+    fs.writeFileSync(path.join(MEMORY_DIR, 'knowledge', 'evolution.md'), '# Project Evolution\n\nRun `/forensic` to generate timeline from git history.\n');
+
+    // Minimal memory-index.md
+    fs.writeFileSync(path.join(MEMORY_DIR, 'memory-index.md'), '# Memory Index\n\nRun `/architect-review` to verify health.\n');
+
+    // Note: architect.md not copied in fallback (agent file, not memory)
+  }
+
+  console.error('✓ MightyArchitect v2.0 memory structure initialized');
+
+  // Load the newly created structure
+  loadV2Structure();
 }
 
 function migrateToV2() {

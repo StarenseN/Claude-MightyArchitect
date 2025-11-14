@@ -18,8 +18,8 @@ console.log('✓ Test 1 passed: architect.md exists');
 
 const content = fs.readFileSync(agentPath, 'utf8');
 
-// Test 2: Has YAML frontmatter
-if (!content.startsWith('---\n')) {
+// Test 2: Has YAML frontmatter (handle both Unix and Windows line endings)
+if (!content.startsWith('---\n') && !content.startsWith('---\r\n')) {
   console.error('✗ Test 2 failed: YAML frontmatter does not start correctly');
   process.exit(1);
 }

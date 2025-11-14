@@ -99,174 +99,102 @@ function analyzeCommit(commitMsg, filesChanged) {
   }
 }
 
-function extractPattern(commitMsg, files) {
-  // Analyze commit type and files to detect pattern
-  const commitType = commitMsg.split(':')[0];
-
-  // Check file types
-  const hasTests = files.some(f => f.includes('test') || f.includes('spec'));
-  const hasModels = files.some(f => f.includes('model') || f.includes('schema'));
-  const hasControllers = files.some(f => f.includes('controller') || f.includes('route'));
-  const hasMiddleware = files.some(f => f.includes('middleware'));
-  const hasComponents = files.some(f => f.includes('component'));
-  const hasServices = files.some(f => f.includes('service'));
-  const hasUtils = files.some(f => f.includes('util') || f.includes('helper'));
-
-  // Pattern detection logic
-  if (hasMiddleware) return 'Middleware/Interceptor Pattern';
-  if (hasControllers && hasModels && hasServices) return 'Layered Architecture (MVC/Three-tier)';
-  if (hasControllers && hasModels) return 'MVC Pattern';
-  if (hasServices && hasModels) return 'Service Layer Pattern';
-  if (hasComponents) return 'Component-Based Architecture';
-  if (hasUtils) return 'Utility/Helper Pattern';
-  if (commitType === 'refactor') return 'Code Refactoring';
-  if (commitType === 'perf') return 'Performance Optimization';
-
-  return 'General Architecture Update';
-}
-
-function calculateBasicScore(filesChanged, commitMsg) {
-  // Simplified scoring for automatic analysis
-  let score = 15; // Base score
-
-  // Rewards
-  if (commitMsg.length > 30 && commitMsg.length < 80) score += 2; // Good commit message
-  if (filesChanged >= 3 && filesChanged <= 7) score += 2; // Reasonable scope
-  if (commitMsg.includes('test')) score += 2; // Mentions testing
-
-  // Note: Full 23-point analysis requires /architect-review command
-
-  return Math.min(score, 20); // Cap at 20 for automatic, reserve 21-23 for manual review
-}
-
-function getScoreTier(score) {
-  if (score >= 21) return 'Excellent';
-  if (score >= 18) return 'Sufficient';
-  return 'Needs Review';
-}
-
-function updateKnowledgeBase(commitHash, commitMsg, filesChanged, pattern, score) {
-  try {
-    const memoryDir = path.join(process.cwd(), '.claude', 'memory', 'knowledge');
-    const patternsFile = path.join(memoryDir, 'patterns.md');
-
-    // Ensure directory exists
-    if (!fs.existsSync(memoryDir)) {
-      return; // Memory not initialized, skip
-    }
-
-    // Read existing patterns or create new
-    let patternsContent = '';
-    if (fs.existsSync(patternsFile)) {
-      patternsContent = fs.readFileSync(patternsFile, 'utf8');
-    } else {
-      patternsContent = '# Architectural Patterns\n\n';
-    }
-
-    // Create new entry
-    const date = new Date().toISOString().split('T')[0];
-    const newEntry = `
-## ${date} - ${pattern}
-
-**Commit**: ${commitHash} - ${commitMsg}
-**Score**: ${score}/23 (${getScoreTier(score)}) - Auto-analyzed
-**Files Changed**: ${filesChanged}
-
-**Pattern**: ${pattern}
-
-**Auto-Analysis Notes**:
-- Detected from commit structure and file changes
-- For detailed evaluation, run \`/architect-review\`
-- This is a basic pattern recognition to keep knowledge base current
-
----
-
-`;
-
-    // Append new entry at the top (after header)
-    const lines = patternsContent.split('\n');
-    const headerEnd = lines.findIndex((line, idx) => idx > 0 && line.startsWith('##'));
-
-    if (headerEnd > 0) {
-      lines.splice(headerEnd, 0, newEntry);
-      patternsContent = lines.join('\n');
-    } else {
-      patternsContent += newEntry;
-    }
-
-    // Write updated file
-    fs.writeFileSync(patternsFile, patternsContent, 'utf8');
-  } catch (error) {
-    // Silent failure - don't break workflow
-  }
-}
+// Deprecated functions removed - functionality replaced by Agent Mode A
+// Old inline pattern detection and scoring moved to Architect Agent
+// and Task Manager Agent (23-point system)
 
 function launchArchitectAgentModeA(commitHash, commitMsg, filesChanged, filesChangedList, gitDiff, taskLogPath) {
   console.log('');
   console.log('🏗️  **Architect Agent Mode A** (Quick Observation)');
   console.log('');
 
-  // Prepare prompt for agent
-  const agentPrompt = `
-You are in Mode A (automatic observation after commit).
+  try {
+    // Prepare context for analysis
+    const context = {
+      commitHash,
+      commitMsg,
+      filesChanged,
+      filesChangedList,
+      gitDiff: gitDiff.slice(0, 2000),
+      taskLogPath,
+      timestamp: new Date().toISOString()
+    };
+
+    // Write context to temp file for future agent invocation
+    // When integrated with Claude, this context will be passed to Task tool
+    const tempFile = path.join(process.cwd(), '.claude', 'memory', '.agent-mode-a-context.json');
+    if (fs.existsSync(path.dirname(tempFile))) {
+      fs.writeFileSync(tempFile, JSON.stringify(context, null, 2));
+    }
+
+    /*
+     * INTEGRATION NOTE:
+     * When this hook runs within Claude, it should trigger:
+     *
+     * Task tool:
+     *   subagent_type: "architect"
+     *   description: "Quick observation of architectural commit"
+     *   model: "haiku"  // Fast model for 60s max
+     *   prompt: <agentPrompt with context>
+     *
+     * The agent will:
+     * 1. Read the context file
+     * 2. Analyze git diff and task log
+     * 3. Detect architectural patterns
+     * 4. Update systemPatterns.md
+     * 5. Return warnings if issues found
+     */
+
+    // Enhanced pattern detection with architectural analysis
+    const analysis = analyzeArchitecturalSignificance(filesChangedList, commitMsg, gitDiff);
+
+    console.log(`✓ Pattern: ${analysis.pattern}`);
+    if (analysis.significance) {
+      console.log(`  Significance: ${analysis.significance}`);
+    }
+
+    // Comprehensive health check
+    const healthIssues = performHealthCheck();
+    healthIssues.forEach(issue => {
+      console.log(`⚠️ Warning: ${issue}`);
+    });
+
+    // Append pattern to systemPatterns.md with more context
+    const coreDir = path.join(process.cwd(), '.claude', 'memory', 'core');
+    const patternsPath = path.join(coreDir, 'systemPatterns.md');
+
+    if (fs.existsSync(patternsPath)) {
+      const date = new Date().toISOString().split('T')[0];
+      const entry = `
+## ${date} - ${analysis.pattern}
 
 **Commit:** ${commitHash} - ${commitMsg}
-**Files Changed:** ${filesChanged}
-**Files List:**
-${filesChangedList.map(f => `- ${f}`).join('\n')}
+**Files Changed:** ${filesChanged} files
+**Architectural Significance:** ${analysis.significance || 'General update'}
 
-**Git Diff:**
-\`\`\`
-${gitDiff.slice(0, 2000)}${gitDiff.length > 2000 ? '\n... (truncated)' : ''}
-\`\`\`
+**Files Modified:**
+${filesChangedList.slice(0, 10).map(f => `- ${f}`).join('\n')}${filesChangedList.length > 10 ? `\n... and ${filesChangedList.length - 10} more` : ''}
 
-${taskLogPath ? `**Recent Task Log:** ${path.basename(taskLogPath)}\n(Read this file for implementation context)` : '**No recent task log found**'}
+**Auto-detected by Architect Agent Mode A**
+${taskLogPath ? `**Related Task Log:** ${path.basename(taskLogPath)}` : ''}
 
-**Your Task (Mode A - 60s max):**
+*Note: For comprehensive analysis, run \`/architect-review\`*
 
-1. Detect architectural pattern from this commit
-2. Read task log if provided (for implementation context)
-3. Quick health check: Do core/ files exist? Any empty?
-4. Append detected pattern to \`.claude/memory/core/systemPatterns.md\`
-5. If issues detected, output WARNING (don't repair - Mode C handles that)
+---
 
-**Output Format:**
-\`\`\`
-✓ Pattern: [Pattern Name]
-⚠️ Warning: [Issue if detected]
-\`\`\`
-
-Be concise. Focus on architectural significance, not code quality (Task Manager's job).
-`.trim();
-
-  // For Phase 3, we'll write output to console
-  // In final implementation, this would use Task tool with subagent_type: "architect"
-  // For now, simulate with simple pattern detection
-
-  const pattern = detectPatternFromFiles(filesChangedList);
-
-  console.log(`✓ Pattern: ${pattern}`);
-
-  // Quick health check
-  const coreDir = path.join(process.cwd(), '.claude', 'memory', 'core');
-  if (!fs.existsSync(coreDir)) {
-    console.log('⚠️ Warning: core/ directory missing - run SessionStart to initialize');
-  } else {
-    const productContextPath = path.join(coreDir, 'productContext.md');
-    if (fs.existsSync(productContextPath)) {
-      const content = fs.readFileSync(productContextPath, 'utf8');
-      if (content.length < 100) {
-        console.log('⚠️ Warning: productContext.md is empty - run /architect-review');
-      }
+`;
+      fs.appendFileSync(patternsPath, entry);
     }
-  }
 
-  // Append pattern to systemPatterns.md
-  const patternsPath = path.join(coreDir, 'systemPatterns.md');
-  if (fs.existsSync(patternsPath)) {
-    const date = new Date().toISOString().split('T')[0];
-    const entry = `\n## ${date} - ${pattern}\n\n**Commit:** ${commitHash} - ${commitMsg}\n**Files Changed:** ${filesChanged}\n\n**Auto-detected by Architect Agent Mode A**\n\n---\n\n`;
-    fs.appendFileSync(patternsPath, entry);
+    // Clean up temp context file after 1 minute (agent should have read it by then)
+    setTimeout(() => {
+      if (fs.existsSync(tempFile)) {
+        fs.unlinkSync(tempFile);
+      }
+    }, 60000);
+
+  } catch (error) {
+    console.error('⚠️ Architect Agent Mode A encountered an error:', error.message);
   }
 
   console.log('');
@@ -274,15 +202,99 @@ Be concise. Focus on architectural significance, not code quality (Task Manager'
   console.log('');
 }
 
-function detectPatternFromFiles(files) {
-  // Simple pattern detection (will be replaced by actual agent)
+function analyzeArchitecturalSignificance(files, commitMsg, gitDiff) {
+  // Enhanced pattern detection with architectural context
+  const analysis = {
+    pattern: 'General Architecture Update',
+    significance: null
+  };
+
+  // Analyze file types and directories
   const hasMiddleware = files.some(f => f.includes('middleware'));
   const hasService = files.some(f => f.includes('service'));
   const hasController = files.some(f => f.includes('controller') || f.includes('route'));
   const hasModel = files.some(f => f.includes('model') || f.includes('schema'));
+  const hasTest = files.some(f => f.includes('test') || f.includes('spec'));
+  const hasConfig = files.some(f => f.includes('config') || f.includes('.env'));
+  const hasHook = files.some(f => f.includes('hook'));
+  const hasAgent = files.some(f => f.includes('agent'));
 
-  if (hasMiddleware) return 'Middleware Pattern';
-  if (hasService && hasModel) return 'Service Layer Pattern';
-  if (hasController && hasModel) return 'MVC Pattern';
-  return 'General Architecture Update';
+  // Pattern identification with priority
+  if (hasAgent && hasHook) {
+    analysis.pattern = 'Agent-Hook Integration Pattern';
+    analysis.significance = 'Automated workflow enhancement';
+  } else if (hasMiddleware && hasController) {
+    analysis.pattern = 'Middleware-Controller Pattern';
+    analysis.significance = 'Request processing pipeline';
+  } else if (hasService && hasModel) {
+    analysis.pattern = 'Service Layer Pattern';
+    analysis.significance = 'Business logic separation';
+  } else if (hasController && hasModel && hasService) {
+    analysis.pattern = 'MVC/Three-Tier Architecture';
+    analysis.significance = 'Full stack implementation';
+  } else if (hasMiddleware) {
+    analysis.pattern = 'Middleware Pattern';
+    analysis.significance = 'Cross-cutting concerns';
+  } else if (hasTest) {
+    analysis.pattern = 'Test-Driven Development';
+    analysis.significance = 'Quality assurance';
+  } else if (hasConfig) {
+    analysis.pattern = 'Configuration Management';
+    analysis.significance = 'Environment setup';
+  } else if (hasHook) {
+    analysis.pattern = 'Event-Driven Hook Pattern';
+    analysis.significance = 'Automated triggers';
+  }
+
+  // Analyze commit message for additional context
+  if (commitMsg.includes('refactor')) {
+    analysis.significance = (analysis.significance || '') + ' - Code restructuring';
+  } else if (commitMsg.includes('perf')) {
+    analysis.significance = (analysis.significance || '') + ' - Performance optimization';
+  } else if (commitMsg.includes('feat')) {
+    analysis.significance = (analysis.significance || '') + ' - New capability';
+  }
+
+  return analysis;
 }
+
+function performHealthCheck() {
+  const issues = [];
+  const coreDir = path.join(process.cwd(), '.claude', 'memory', 'core');
+
+  if (!fs.existsSync(coreDir)) {
+    issues.push('core/ directory missing - run SessionStart to initialize');
+    return issues;
+  }
+
+  // Check each core file
+  const coreFiles = [
+    { name: 'projectbrief.md', minSize: 50 },
+    { name: 'productContext.md', minSize: 50 },
+    { name: 'techContext.md', minSize: 50 },
+    { name: 'systemPatterns.md', minSize: 30 },
+    { name: 'activeContext.md', minSize: 30 },
+    { name: 'progress.md', minSize: 30 }
+  ];
+
+  coreFiles.forEach(file => {
+    const filePath = path.join(coreDir, file.name);
+    if (!fs.existsSync(filePath)) {
+      issues.push(`${file.name} missing - run /architect-review to create`);
+    } else {
+      const content = fs.readFileSync(filePath, 'utf8');
+      if (content.length < file.minSize) {
+        issues.push(`${file.name} appears empty - complete via /architect-review`);
+      }
+    }
+  });
+
+  // Check memory index
+  const memoryIndexPath = path.join(process.cwd(), '.claude', 'memory', 'memory-index.md');
+  if (!fs.existsSync(memoryIndexPath)) {
+    issues.push('memory-index.md missing - run /architect-review to generate');
+  }
+
+  return issues;
+}
+

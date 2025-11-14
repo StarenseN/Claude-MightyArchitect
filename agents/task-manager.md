@@ -20,7 +20,7 @@ Your job is to analyze completed todos, detect thematic coherence, and create hi
 
 When invoked, you receive:
 - List of completed todos
-- Current context from `.claude/memory/activeContext.md`
+- Current context from `.claude/memory/core/activeContext.md`
 - List of recent task logs (for duplicate detection)
 
 ## You Must Output
@@ -226,7 +226,7 @@ Example: "Task 1: Add User Auth" → "task-1-add-user-auth"
 ## Critical Rules
 
 ✅ DO:
-- Read `.claude/memory/activeContext.md` for context
+- Read `.claude/memory/core/activeContext.md` for context
 - Group todos semantically (by feature/goal)
 - Check for pending related todos
 - **Score with brutal honesty** - "dure mais juste", not here to please

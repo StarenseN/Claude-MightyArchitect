@@ -5,6 +5,80 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2025-11-14
+
+### Added
+- **Architect Agent System**: Revolutionary two-mode architectural analysis
+  - Mode A: Quick observation (60s) triggered automatically on commits
+  - Mode C: Comprehensive analysis (5-10min) via `/architect-review`
+- **Enhanced Pattern Detection**: 8 architectural patterns auto-detected
+  - Agent-Hook Integration Pattern
+  - Middleware-Controller Pattern
+  - Service Layer Pattern
+  - MVC/Three-Tier Architecture
+  - Test-Driven Development
+  - Configuration Management
+  - Event-Driven Hook Pattern
+  - General Architecture Updates
+- **Health Check System**: Automatic verification of memory structure integrity
+- **Version Tracking**: `.version` file prevents accidental re-migration
+- **Auto-Migration**: Seamless v1→v2 upgrade with full backup
+- **Corrupted Structure Repair**: Auto-recovery for damaged v2.0 structures
+- **New Directories**: `plans/` and `errors/` for better organization
+- **Memory Index**: Health status dashboard at `memory-index.md`
+- **Integration Tests**: Comprehensive test suite for v2.0 features
+  - New project initialization test
+  - v1 to v2 migration test
+  - Architect Mode A trigger test
+
+### Changed
+- **Hierarchical Structure**: Moved to `core/` directory organization
+  - `activeContext.md` → `core/activeContext.md`
+  - `knowledge/patterns.md` → `core/systemPatterns.md`
+  - Added 4 new core files: `projectbrief.md`, `productContext.md`, `techContext.md`, `progress.md`
+- **Token Optimization**: Reduced from 3000+ to 800-1000 tokens (73% reduction)
+  - Selective loading: only `activeContext.md`, `systemPatterns.md`, `memory-index.md`
+  - Other files loaded on-demand
+- **Clear Separation of Concerns**:
+  - Task Manager: Handles 23-point scoring
+  - Architect Agent: Analyzes patterns and architecture
+  - LLM: Executes tasks
+- **Task Log Format**: Changed to `YYYYMMDD-HHMMSS-description.md`
+- **Pattern Recording**: Enhanced with significance tracking and auto-append
+
+### Fixed
+- Migration now creates version file to prevent re-migration
+- Architect Mode A properly detects and categorizes patterns
+- Health checks verify all 6 core files
+- Session-start hook handles v1, v2, and corrupted structures correctly
+
+### Removed
+- Old inline pattern detection in git-commit.js (moved to Agent Mode A)
+- v1.x architect.md with 23-point scoring (replaced with agent instructions)
+- Deprecated scoring functions (100+ lines removed)
+
+### Migration Notes
+
+#### From v1.x to v2.0
+The system will **automatically migrate** on first use:
+1. Creates backup at `.claude/memory.backup-v1/`
+2. Moves files to new structure
+3. Creates missing core files from templates
+4. Installs v2.0 architect agent
+5. Creates version file
+
+No manual intervention required. Your existing memory is preserved.
+
+#### Breaking Changes
+- Task logs now use YYYYMMDD-HHMMSS format (was flexible before)
+- architect.md is no longer loaded automatically (agent instructions)
+- patterns.md renamed to systemPatterns.md and moved to core/
+
+#### Compatibility
+- **v2.0 is backward compatible** - existing v1.x installations will auto-migrate
+- **No data loss** - full backup created before migration
+- **Windows workaround** still required for SessionStart hooks
+
 ## [Unreleased]
 
 ### Added

@@ -21,11 +21,11 @@
 
 MightyArchitect transforms Claude Code into an **intelligent development partner** with persistent memory that:
 
-- 📝 **Remembers your context** across sessions (~800 tokens vs original's 3000+)
+- 📝 **Remembers your context** across sessions (800-1000 tokens vs Windsurf's 3000+)
 - 🏗️ **Analyzes your architecture** automatically on significant commits
-- 🎯 **Scores code quality** objectively using a 23-point system
+- 🎯 **Scores code quality** objectively using a 23-point system (Task Manager)
 - 📚 **Builds knowledge** by documenting patterns and decisions
-- 🚀 **Zero setup** - one command installation with no external dependencies
+- 🚀 **Zero setup** - one command installation with auto v1→v2 migration
 
 ### Why MightyArchitect?
 
@@ -74,11 +74,11 @@ Objective code quality scoring:
 </td>
 <td>
 
-### ⚡ Token Efficient
-**73% reduction** from original:
-- MightyArchitect: ~800 tokens
-- Original: ~3000+ tokens
-- Selective loading strategy
+### ⚡ Token Efficient (v2.0)
+**73% reduction** from Windsurf:
+- MightyArchitect v2.0: 800-1000 tokens
+- Windsurf: ~3000+ tokens
+- Selective loading: 3 files only
 
 </td>
 </tr>
@@ -118,6 +118,41 @@ Understand legacy codebases:
 </td>
 </tr>
 </table>
+
+---
+
+## 🆕 What's New in v2.0
+
+### Architectural Improvements
+- **🏗️ Architect Agent**: Two modes for different analysis depths
+  - **Mode A**: Quick observation (60s) - auto-triggered on commits
+  - **Mode C**: Full analysis (5-10min) - manual via `/architect-review`
+- **📁 Hierarchical structure**: `core/` directory for better organization
+- **🔄 Auto-migration**: Seamless upgrade from v1.x with backup
+- **🎯 Clear separation**: Task Manager scores, Architect analyzes
+
+### Enhanced Pattern Detection
+8 architectural patterns auto-detected:
+- Agent-Hook Integration
+- Middleware-Controller
+- Service Layer
+- MVC/Three-Tier
+- Test-Driven Development
+- Configuration Management
+- Event-Driven Hooks
+- General Architecture Updates
+
+### Token Optimization
+- **Before**: 3000+ tokens (Windsurf full context)
+- **After**: 800-1000 tokens (selective loading)
+- **Strategy**: Load only activeContext, systemPatterns, memory-index
+- **Result**: 73% reduction without losing critical context
+
+### Migration Safety
+- Automatic v1→v2 migration on first use
+- Full backup created at `.claude/memory.backup-v1/`
+- Version tracking prevents re-migration
+- Corrupted structure auto-repair
 
 ---
 
@@ -183,29 +218,37 @@ Or individually:
 
 ## 🧠 How It Works
 
-### Memory Structure
+### Memory Structure (v2.0)
 
 MightyArchitect creates a `.claude/memory/` directory in your project:
 
 ```
 .claude/memory/
-├── 📝 activeContext.md        # 👁️  Always loaded (~200 tokens)
-│                               # Your current work, focus, blockers
+├── 📝 core/                          # Core memory (selectively loaded)
+│   ├── activeContext.md              # 👁️ Always loaded (~200 tokens)
+│   ├── systemPatterns.md             # 👁️ Always loaded (~300 tokens)
+│   ├── projectbrief.md               # 📁 Project overview
+│   ├── productContext.md             # 📁 Problem/solution context
+│   ├── techContext.md                # 📁 Technology decisions
+│   └── progress.md                   # 📁 Roadmap & features
 │
-├── 🏗️  architect.md            # 👁️  Always loaded (~600 tokens)
-│                               # 23-point rubric, analysis instructions
+├── 🏗️ architect.md                   # 📁 Agent instructions (not loaded)
+│                                     # Architect Agent Modes A & C
 │
-├── 📂 tasks/                   # 📁 Loaded on-demand
-│   ├── 2025-11-12-auth.md      # Task logs with evaluations
-│   ├── 2025-11-11-api.md       # Recent work history
-│   └── template.md             # Template for new logs
+├── 📂 tasks/                         # 📁 Task logs (on-demand)
+│   ├── 20251112-120000-auth.md      # Timestamped task logs
+│   └── 20251111-143000-api.md       # With 23-point scoring
 │
-└── 📂 knowledge/               # 🧠 Long-term wisdom
-    ├── patterns.md             # Architectural patterns observed
-    └── decisions.md            # Key decisions & rationales
+├── 📂 knowledge/                     # 🧠 Long-term wisdom
+│   ├── decisions.md                  # Architectural decisions
+│   └── evolution.md                  # Project history
+│
+├── 📂 plans/                         # 📁 Implementation plans
+├── 📂 errors/                        # 📁 Error patterns
+└── 📄 memory-index.md                # 👁️ Health status (~300 tokens)
 ```
 
-**Legend**: 👁️ = Auto-loaded | 📁 = On-demand | 🧠 = Accumulated wisdom
+**Legend**: 👁️ = Auto-loaded (800-1000 tokens total) | 📁 = On-demand | 🧠 = Accumulated wisdom
 
 ### Example: activeContext.md
 
@@ -304,19 +347,19 @@ Code normally with Claude. Memory provides context automatically.
 git commit -m "feat: add JWT authentication middleware"
 ```
 
-**Automatic analysis** (PostToolUse hook):
+**Automatic analysis** (Architect Agent Mode A - v2.0):
 ```
-🏗️  MightyArchitect Analysis Complete (Automatic)
+🏗️  **Architect Agent Mode A** (Quick Observation)
 
-Commit: abc1234 - feat: add JWT authentication middleware
-Files Changed: 5
-Pattern Detected: Middleware/Interceptor Pattern
-Estimated Score: 19/23 (Sufficient)
+✓ Pattern: Middleware-Controller Pattern
+  Significance: Request processing pipeline
 
-Knowledge Base Updated:
-✓ .claude/memory/knowledge/patterns.md
+⚠️ Warning: techContext.md appears empty - complete via /architect-review
 
-💡 Tip: Run /architect-review for detailed analysis with full 23-point evaluation
+Pattern appended to core/systemPatterns.md
+Auto-detected by Architect Agent Mode A
+
+💡 Tip: Run /architect-review for comprehensive analysis
 ```
 
 > 💡 **Note**: The hook automatically *analyzes* significant commits (feat/refactor/perf with 3+ files), detects patterns, calculates a basic score (15-20/23), and updates your knowledge base. For comprehensive 23-point evaluation with detailed rationale, run `/architect-review`.

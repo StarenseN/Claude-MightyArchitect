@@ -200,3 +200,89 @@ function updateKnowledgeBase(commitHash, commitMsg, filesChanged, pattern, score
     // Silent failure - don't break workflow
   }
 }
+
+function launchArchitectAgentModeA(commitHash, commitMsg, filesChanged, filesChangedList, gitDiff, taskLogPath) {
+  console.log('');
+  console.log('🏗️  **Architect Agent Mode A** (Quick Observation)');
+  console.log('');
+
+  // Prepare prompt for agent
+  const agentPrompt = `
+You are in Mode A (automatic observation after commit).
+
+**Commit:** ${commitHash} - ${commitMsg}
+**Files Changed:** ${filesChanged}
+**Files List:**
+${filesChangedList.map(f => `- ${f}`).join('\n')}
+
+**Git Diff:**
+\`\`\`
+${gitDiff.slice(0, 2000)}${gitDiff.length > 2000 ? '\n... (truncated)' : ''}
+\`\`\`
+
+${taskLogPath ? `**Recent Task Log:** ${path.basename(taskLogPath)}\n(Read this file for implementation context)` : '**No recent task log found**'}
+
+**Your Task (Mode A - 60s max):**
+
+1. Detect architectural pattern from this commit
+2. Read task log if provided (for implementation context)
+3. Quick health check: Do core/ files exist? Any empty?
+4. Append detected pattern to \`.claude/memory/core/systemPatterns.md\`
+5. If issues detected, output WARNING (don't repair - Mode C handles that)
+
+**Output Format:**
+\`\`\`
+✓ Pattern: [Pattern Name]
+⚠️ Warning: [Issue if detected]
+\`\`\`
+
+Be concise. Focus on architectural significance, not code quality (Task Manager's job).
+`.trim();
+
+  // For Phase 3, we'll write output to console
+  // In final implementation, this would use Task tool with subagent_type: "architect"
+  // For now, simulate with simple pattern detection
+
+  const pattern = detectPatternFromFiles(filesChangedList);
+
+  console.log(`✓ Pattern: ${pattern}`);
+
+  // Quick health check
+  const coreDir = path.join(process.cwd(), '.claude', 'memory', 'core');
+  if (!fs.existsSync(coreDir)) {
+    console.log('⚠️ Warning: core/ directory missing - run SessionStart to initialize');
+  } else {
+    const productContextPath = path.join(coreDir, 'productContext.md');
+    if (fs.existsSync(productContextPath)) {
+      const content = fs.readFileSync(productContextPath, 'utf8');
+      if (content.length < 100) {
+        console.log('⚠️ Warning: productContext.md is empty - run /architect-review');
+      }
+    }
+  }
+
+  // Append pattern to systemPatterns.md
+  const patternsPath = path.join(coreDir, 'systemPatterns.md');
+  if (fs.existsSync(patternsPath)) {
+    const date = new Date().toISOString().split('T')[0];
+    const entry = `\n## ${date} - ${pattern}\n\n**Commit:** ${commitHash} - ${commitMsg}\n**Files Changed:** ${filesChanged}\n\n**Auto-detected by Architect Agent Mode A**\n\n---\n\n`;
+    fs.appendFileSync(patternsPath, entry);
+  }
+
+  console.log('');
+  console.log('💡 Tip: Run `/architect-review` for comprehensive analysis');
+  console.log('');
+}
+
+function detectPatternFromFiles(files) {
+  // Simple pattern detection (will be replaced by actual agent)
+  const hasMiddleware = files.some(f => f.includes('middleware'));
+  const hasService = files.some(f => f.includes('service'));
+  const hasController = files.some(f => f.includes('controller') || f.includes('route'));
+  const hasModel = files.some(f => f.includes('model') || f.includes('schema'));
+
+  if (hasMiddleware) return 'Middleware Pattern';
+  if (hasService && hasModel) return 'Service Layer Pattern';
+  if (hasController && hasModel) return 'MVC Pattern';
+  return 'General Architecture Update';
+}

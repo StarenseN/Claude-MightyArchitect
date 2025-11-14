@@ -1,104 +1,82 @@
 ---
 name: bootstrap
-description: Bootstrap MightyArchitect on existing undocumented project (with automatic forensic analysis)
+description: Bootstrap MightyArchitect on existing project (one-time comprehensive onboarding)
 ---
 
 # Bootstrapping MightyArchitect on Existing Project
 
-I'll help you capture the architectural knowledge from your existing codebase through a comprehensive 3-phase analysis.
+**One-time comprehensive onboarding** that captures your project's complete history and tribal knowledge.
 
-## Phase 0: Git Forensic Analysis (Automatic - I'll do this first)
+---
 
-**What I'll analyze:**
-1. **Commit Timeline** - Major features, refactoring events, performance changes
-2. **File Evolution** - Hotspots (most modified files), creation dates, large commits
-3. **Author Patterns** - Who worked on what (tribal knowledge owners)
-4. **Architecture Timeline** - Inflection points, dependency evolution, tech stack changes
+## What Happens (Fully Automatic)
 
-**Output:**
-- `.claude/memory/knowledge/evolution.md` - Project evolution timeline
-- Partial `patterns.md` - When patterns first emerged
-- Partial `decisions.md` - Inferred architectural decisions
+### Phase 0: Git Forensic Analysis (2-5 min)
 
-**Duration:** 2-5 minutes depending on project history
+I'll analyze your **complete git history**:
+- Commit timeline - All major features, refactorings, performance changes
+- File evolution - Hotspots (most modified files), creation dates
+- Author patterns - Who worked on what (tribal knowledge owners)
+- Architecture timeline - When patterns emerged, tech stack evolution
 
-**Modes:**
-- Default: Last 3 months (quick recent analysis)
-- Deep: Full project history (use `--deep` flag)
-- Focused: Specific directory (use `--path src/api`)
+**Output**: `.claude/memory/knowledge/evolution.md`
 
-## Phase 1: Codebase Analysis (Automatic - I'll do this)
+### Phase 1: Codebase Analysis (3-7 min)
 
-**What I'll do:**
-1. Explore your project structure using the Task tool (medium thoroughness)
-2. Identify 5-7 key architectural patterns currently in use
-3. Infer major architectural decisions from code structure
-4. Cross-reference with forensic findings (Phase 0)
-5. Complete `.claude/memory/knowledge/patterns.md`
-6. Complete `.claude/memory/knowledge/decisions.md`
+I'll explore your **entire codebase**:
+- Project structure and organization
+- 5-7 key architectural patterns in use
+- Technology stack and dependencies
+- Cross-reference with forensic findings
 
-**Duration:** 3-7 minutes depending on codebase size
+**Output**: Updates to `patterns.md` and `decisions.md`
 
-## Phase 2: Knowledge Capture (Interactive - You'll help)
+### Phase 2: Knowledge Capture (5-15 min - Your Input)
 
-After automated analysis, I'll ask you questions about:
-- **Rationale**: Why certain decisions were made
-- **Timeline**: When patterns emerged or changed (confirming forensic findings)
-- **Context**: External factors (deadlines, team changes, business requirements)
-- **Pain points**: What you'd change if starting fresh
-- **Tribal knowledge**: Things not visible in code or git history
+I'll ask you questions about:
+- **Rationale** - Why certain decisions were made
+- **Context** - Business requirements, deadlines, team changes
+- **Pain points** - What you'd change if starting fresh
+- **Tribal knowledge** - Things not visible in code/git
 
-**Duration:** 5-15 minutes (your time investment)
+**Output**: Complete `decisions.md` with the "why"
 
-## Phase 3: Memory Initialization (Automatic)
+### Phase 3: Memory Initialization (1-2 min)
 
-Once bootstrapped, I'll:
-- Update `.claude/memory/core/activeContext.md` with current state
-- Fill `projectbrief.md`, `productContext.md`, `techContext.md`
-- Create comprehensive `systemPatterns.md` from forensic + code analysis
-- Set up initial `progress.md` with improvement roadmap
-- Generate `memory-index.md` health dashboard
+I'll set up your complete memory system:
+- `core/activeContext.md` - Current project state
+- `core/projectbrief.md` - Project overview
+- `core/productContext.md` - Business context
+- `core/techContext.md` - Tech stack & decisions
+- `core/systemPatterns.md` - Architectural patterns
+- `core/progress.md` - Improvement roadmap
+- `core/memory-index.md` - Health dashboard
+
+**Output**: Complete `.claude/memory/` structure
 
 ---
 
 ## Ready to Start?
 
-Tell me about your project:
-- **What type of app is it?** (web, mobile, API, CLI, etc.)
-- **What's the main tech stack?** (Node.js, Python, Go, etc.)
-- **How old is the project?** (months/years)
-- **Any known architectural pain points?**
-- **Analysis depth?** (Quick: last 3 months | Deep: full history)
+Just tell me about your project:
 
-Then I'll begin:
-1. **Phase 0**: Forensic analysis (automatic)
-2. **Phase 1**: Code analysis (automatic)
-3. **Phase 2**: Q&A with you (interactive)
-4. **Phase 3**: Memory initialization (automatic)
+**Required Info:**
+- What type of app? (web, mobile, API, CLI, etc.)
+- Main tech stack? (Node.js, Python, Go, React, etc.)
+- How old? (months/years)
 
----
+**Optional Info:**
+- Known pain points?
+- Most complex areas?
+- Team size?
 
-## Optional Flags
-
-```bash
-# Quick bootstrap (last 3 months history)
-/bootstrap
-
-# Deep bootstrap (full git history)
-/bootstrap --deep
-
-# Focus on specific directory
-/bootstrap --path src/api --deep
-
-# Skip forensic (code analysis only)
-/bootstrap --no-forensic
-```
+Then I'll run the complete analysis (10-30 minutes total).
 
 ---
 
-## Example Output Structure
+## Example Output
 
-After completion, you'll have:
+After completion, you'll have **~2000-4000 lines of documentation**:
 
 ```
 .claude/memory/
@@ -106,20 +84,31 @@ After completion, you'll have:
 │   ├── activeContext.md       ✅ Current project state
 │   ├── projectbrief.md        ✅ Project overview
 │   ├── productContext.md      ✅ Business context
-│   ├── techContext.md         ✅ Tech stack & decisions
+│   ├── techContext.md         ✅ Tech decisions
 │   ├── systemPatterns.md      ✅ Architectural patterns
-│   ├── progress.md            ✅ Roadmap & improvements
+│   ├── progress.md            ✅ Improvement roadmap
 │   └── memory-index.md        ✅ Health dashboard
 │
 └── knowledge/
-    ├── evolution.md           ✅ Git forensic timeline
-    ├── patterns.md            ✅ Pattern emergence history
-    └── decisions.md           ✅ Architectural decisions
+    ├── evolution.md           ✅ Complete git timeline
+    ├── patterns.md            ✅ Pattern history
+    └── decisions.md           ✅ Decision rationale
 
-Total documentation: ~2000-4000 lines of context
-Token usage: ~1500-2500 tokens when loaded
+Token usage when loaded: ~1500-2500 tokens
 ```
 
 ---
 
-**This is comprehensive onboarding for legacy projects - let's capture your tribal knowledge!** 🏗️
+## After Bootstrap
+
+Going forward:
+- ✅ Memory auto-loads on session start
+- ✅ Patterns auto-detected on commits
+- ✅ Run `/architect-review` for detailed analysis
+- ✅ Task logs auto-created when completing todos
+
+**Bootstrap is one-time only** - from then on, the system maintains itself automatically.
+
+---
+
+**This captures your entire project's story - let's preserve your tribal knowledge!** 🏗️

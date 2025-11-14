@@ -595,38 +595,22 @@ Blockers: None
 - Average quality score: 20.3/23 (Sufficient)
 ```
 
-### `/bootstrap` (Recommended for Legacy Projects)
+### `/bootstrap` (One-Time Comprehensive Onboarding)
 
-Comprehensive 4-phase workflow to onboard MightyArchitect on existing undocumented projects:
+**One-time comprehensive onboarding** that captures your project's complete history and tribal knowledge:
 
 ```bash
 /bootstrap
 ```
 
-**What it does**:
-- **Phase 0 (Automatic)**: Git forensic analysis - analyzes commit history, identifies file hotspots, maps architectural evolution
-- **Phase 1 (Automatic)**: Codebase analysis - explores structure, identifies 5-7 patterns, cross-references with forensic findings
-- **Phase 2 (Interactive)**: Q&A with you - asks "why" behind decisions, captures tribal knowledge
-- **Phase 3 (Automatic)**: Memory initialization - sets up complete `.claude/memory/` structure with all context
-
-**Usage modes**:
-
-```bash
-# Quick bootstrap (last 3 months history)
-/bootstrap
-
-# Deep bootstrap (full git history)
-/bootstrap --deep
-
-# Focus on specific directory
-/bootstrap --path src/api --deep
-
-# Skip forensic (code analysis only)
-/bootstrap --no-forensic
-```
+**What it does** (fully automatic 4-phase workflow):
+- **Phase 0 (2-5 min)**: Git forensic analysis - analyzes **complete git history**, identifies file hotspots, maps architectural evolution
+- **Phase 1 (3-7 min)**: Codebase analysis - explores **entire codebase**, identifies 5-7 patterns, cross-references with forensic findings
+- **Phase 2 (5-15 min)**: Interactive Q&A - asks "why" behind decisions, captures tribal knowledge not visible in code
+- **Phase 3 (1-2 min)**: Memory initialization - sets up complete `.claude/memory/` structure with all context
 
 **Output**: Complete memory system (~2000-4000 lines of documentation):
-- `core/` - Project brief, context, patterns, progress
+- `core/` - Project brief, context, patterns, progress (~800 tokens)
 - `knowledge/evolution.md` - Full project timeline from git history
 - `knowledge/patterns.md` - Pattern emergence and usage
 - `knowledge/decisions.md` - Architectural decisions with rationale
@@ -634,13 +618,13 @@ Comprehensive 4-phase workflow to onboard MightyArchitect on existing undocument
 **Duration**: 10-30 minutes (mostly automatic, ~5-15 min of your Q&A time)
 
 **Use when**:
-- First time using MightyArchitect on existing project
+- First time using MightyArchitect on existing project (>3 months old)
 - Project has no documentation
 - You want to capture tribal knowledge before it's lost
 - Onboarding new team members
 - Taking over inherited codebases
 
-**Perfect for**: Complete project onboarding with git history + code analysis + tribal knowledge capture.
+> **Note**: Bootstrap is a one-time command that always performs deep analysis of your entire project history. After bootstrap, the system maintains itself automatically through git commit hooks.
 
 ### `/forensic` (Git History Only)
 

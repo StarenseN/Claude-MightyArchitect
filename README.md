@@ -719,6 +719,54 @@ cat ~/.claude/settings.json | grep -A 5 TodoWrite
 
 **Full documentation**: See [`docs/plans/2025-11-12-todowrite-integration.md`](docs/plans/2025-11-12-todowrite-integration.md)
 
+### `/score-tasks` ⭐ NEW
+
+Invoke Task Manager Agent to score all unscored task logs:
+
+```bash
+/score-tasks
+```
+
+**What it does**:
+- Scans `.claude/memory/tasks/` for task logs with `Score: [To be filled]/23`
+- Invokes Task Manager Agent to analyze each unscored task
+- Updates task logs with objective 23-point quality scores
+- Provides detailed evaluation against quality criteria
+
+**Automatic Trigger**:
+- PostToolUse hook monitors TodoWrite completions
+- **Every 10 unscored task logs**, you'll see: `📊 TASK MANAGER INVOCATION RECOMMENDED`
+- Claude will suggest running `/score-tasks` automatically
+
+**Example Output**:
+```
+📊 Task Manager Scoring Session
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Found: 20 unscored task logs
+
+Scoring in progress...
+✓ 2025-11-14-implement-config.md → Score: 21/23 (Excellent)
+✓ 2025-11-14-create-scraper.md → Score: 19/23 (Sufficient)
+✓ 2025-11-14-add-error-handling.md → Score: 18/23 (Sufficient)
+...
+
+Summary:
+- Tasks scored: 20
+- Average score: 19.5/23
+- Excellent (21-23): 8
+- Sufficient (18-20): 10
+- Needs work (<18): 2
+```
+
+**When to use**:
+- ✅ After completing a batch of tasks (10-20 todos)
+- ✅ End of coding session
+- ✅ Before running `/architect-review` (for complete analysis)
+- ✅ When you see the automatic notification
+
+**Integration**: Works seamlessly with `/register-todowrite-hook` - task logs are created automatically, then scored on demand.
+
 ### Windows Workaround Commands
 
 Due to [SessionStart hook bug #9542](https://github.com/anthropics/claude-code/issues/9542), Windows users need manual activation:
